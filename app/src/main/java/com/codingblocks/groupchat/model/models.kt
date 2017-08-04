@@ -6,5 +6,4 @@ package com.codingblocks.groupchat.model
 
 
 data class Group(val groupName: String,
-                  val groupId: String,
                  val messages:String )
