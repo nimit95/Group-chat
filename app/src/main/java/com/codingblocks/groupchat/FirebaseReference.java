@@ -12,6 +12,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class FirebaseReference extends Application {
     public static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    public static DatabaseReference userReference = database.getReference("users");
-    public static DatabaseReference groupsReference = database.getReference("groups");
+    public static DatabaseReference userReference = database.getReference().child("users");
+    public static DatabaseReference groupsReference = database.getReference().child("groups");
 }
