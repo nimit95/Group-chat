@@ -2,6 +2,8 @@ package com.codingblocks.groupchat.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +11,7 @@ import android.widget.EditText;
 
 import com.codingblocks.groupchat.FirebaseReference;
 import com.codingblocks.groupchat.R;
+import com.codingblocks.groupchat.adapters.recyclerAdapters.GroupFeedRecyclerAdapter;
 import com.codingblocks.groupchat.model.Group;
 import com.codingblocks.groupchat.model.User;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
@@ -26,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private SuperPrefs superPrefs;
     private ArrayList<Group> usersGroupList;
     private User currentUser;
-
+    private RecyclerView groupFeedRecyclerView;
+    private GroupFeedRecyclerAdapter groupFeedRecyclerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +46,15 @@ public class MainActivity extends AppCompatActivity {
         usersGroupList = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        groupFeedRecyclerView = (RecyclerView) findViewById(R.id.group_feed_recycler);
+        groupFeedRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        groupFeedRecyclerView.setHasFixedSize(true);
+        groupFeedRecyclerAdapter = new GroupFeedRecyclerAdapter(MainActivity.this, usersGroupList);
+
+
         retrieveUser();
 
-
+        addGroupsToView();
 
         createNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +84,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    private void addGroupsToView() {
+        groupFeedRecyclerView.setAdapter(groupFeedRecyclerAdapter);
+    }
+    private void refreshGroup() {
+        groupFeedRecyclerAdapter.notifyDataSetChanged();
+    }
     private Group createGroupFirebase(String groupName) {
         /// How to follow MVC here ?
         DatabaseReference newGroupRef = FirebaseReference.groupsReference.push();
@@ -93,12 +108,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void retrieveGroups() {
         final ArrayList<String> groupIDs = new ArrayList<>();
+
+        Log.e("App", "retrive Group function called");
+
         FirebaseReference.userReference.child(currentUser.getUserId()).child("usersGroup").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot elem : dataSnapshot.getChildren()) {
+                    Log.e("dkfn",elem.getValue(String.class));
                     groupIDs.add(elem.getValue(String.class));
+
                 }
+                groupIdToGroups(groupIDs);
+
+
 
             }
 
@@ -107,12 +130,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+    }
+
+    private void groupIdToGroups(ArrayList<String> groupIDs) {
+
         for (String groupId : groupIDs) {
+            Log.e("group",groupId);
             FirebaseReference.groupsReference.child(groupId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     //Add elements to usersGroupList
                     usersGroupList.add(dataSnapshot.getValue(Group.class));
+                    Log.e("list size", usersGroupList.size() + "");
+                    refreshGroup();
                 }
 
                 @Override
@@ -122,9 +154,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-
     }
-
     private void retrieveUser() {
         Log.e("nimit","knm" +getFirebaseUserId());
         FirebaseReference.userReference.child(getFirebaseUserId()).addValueEventListener(new ValueEventListener() {

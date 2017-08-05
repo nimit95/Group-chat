@@ -2,6 +2,7 @@ package com.codingblocks.groupchat.adapters.recyclerAdapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +14,16 @@ import com.codingblocks.groupchat.model.Group;
 import java.util.List;
 
 /**
- * Created by piyush on 5/8/17.
+ * Created by piyush and nimit on 5/8/17.
  */
 
 public class GroupFeedRecyclerAdapter extends RecyclerView.Adapter<GroupViewHolder>{
     private List<Group> groupList;
     public Context context;
-    public GroupFeedRecyclerAdapter(List<Group> groupList, Context context) {
+    public GroupFeedRecyclerAdapter(Context context, List<Group> groupList) {
         this.groupList = groupList;
         this.context = context;
+        Log.e("list size", groupList.size() + "");
     }
 
     @Override
