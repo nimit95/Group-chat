@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private Group createGroupFirebase(String groupName) {
         /// How to follow MVC here ?
         DatabaseReference newGroupRef = FirebaseReference.groupsReference.push();
