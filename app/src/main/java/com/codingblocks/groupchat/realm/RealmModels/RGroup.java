@@ -1,5 +1,6 @@
 package com.codingblocks.groupchat.realm.RealmModels;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
@@ -8,10 +9,7 @@ import io.realm.RealmObject;
 
 public class RGroup extends RealmObject{
     private String groupID;
-    private String firebaseUserID;
-    private String message;
-    private String timeStamp;
-
+    private RealmList<RMessage> realmMessageList;
 
     public String getGroupID() {
         return groupID;
@@ -21,27 +19,11 @@ public class RGroup extends RealmObject{
         this.groupID = groupID;
     }
 
-    public String getFirebaseUserID() {
-        return firebaseUserID;
+    public RealmList<RMessage> getRealmMessageList() {
+        return realmMessageList;
     }
 
-    public void setFirebaseUserID(String firebaseUserID) {
-        this.firebaseUserID = firebaseUserID;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setRealmMessageList(RealmList<RMessage> realmMessageList) {
+        this.realmMessageList = realmMessageList;
     }
 }

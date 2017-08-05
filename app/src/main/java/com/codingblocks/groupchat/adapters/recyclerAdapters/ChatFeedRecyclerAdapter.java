@@ -1,6 +1,8 @@
 package com.codingblocks.groupchat.adapters.recyclerAdapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,36 +11,40 @@ import android.view.ViewGroup;
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.viewHolders.*;
 import com.codingblocks.groupchat.model.Message;
+import com.codingblocks.groupchat.realm.RealmModels.RGroup;
+import com.codingblocks.groupchat.realm.RealmModels.RMessage;
 import com.codingblocks.groupchat.utils.CONSTANTS;
 import com.codingblocks.groupchat.utils.FirebaseUserID;
 
 import java.util.List;
 
+import io.realm.OrderedRealmCollection;
+import io.realm.RealmRecyclerViewAdapter;
+
 /**
  * Created by piyush on 5/8/17.
  */
 
-public class ChatFeedRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder> implements CONSTANTS{
+//public class ChatFeedRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder> implements CONSTANTS{
+public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, RecyclerView.ViewHolder> implements CONSTANTS{
 
-    List<Message> messageList;
-    Context context;
-    public ChatFeedRecyclerAdapter(List<Message> messageList, Context context){
-        this.messageList = messageList;
-        this.context = context;
+    public ChatFeedRecyclerAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<RMessage> data, boolean autoUpdate) {
+        super(context, data, autoUpdate);
     }
 
     @Override
     public int getItemViewType(int position) {
-
         String userID = FirebaseUserID.getFirebaseUserId(context);
 
-        if(messageList.get(position).getFirebaseUserID()== userID)
+        RMessage rMessage = getData().get(position);
+
+        if(rMessage.getFirebaseUserID()== userID)
             return OUR_MESSAGE;
         return OTHERS_MESSAGE;
     }
 
     @Override
-    public ChatViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view;
 
@@ -54,14 +60,15 @@ public class ChatFeedRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ChatViewHolder holder, int position) {
-        holder.timeStamp.setText(messageList.get(position).getTimestamp());
-        holder.chatTextView.setText(messageList.get(position).getMessage());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-    }
+        ChatViewHolder chatViewHolder = null;
+        if (holder instanceof ChatViewHolder)
+            chatViewHolder = (ChatViewHolder) holder;
 
-    @Override
-    public int getItemCount() {
-        return messageList.size();
-    }
-}
+        RMessage message = getData().get(position);
+
+        chatViewHolder.timeStamp.setText(message.getTimeStamp());
+        chatViewHolder.chatTextView.setText(message.getMessage());
+
+    }}

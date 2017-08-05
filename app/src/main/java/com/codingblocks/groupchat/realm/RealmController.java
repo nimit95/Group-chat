@@ -1,11 +1,17 @@
 package com.codingblocks.groupchat.realm;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.codingblocks.groupchat.model.Message;
 import com.codingblocks.groupchat.realm.RealmModels.RGroup;
+import com.codingblocks.groupchat.realm.RealmModels.RMessage;
 
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * Created by piyush on 5/8/17.
@@ -13,7 +19,8 @@ import io.realm.Realm;
 
 public class RealmController {
 
-    public static void addToRealm(final List<Message> msgList){
+    public static void addToRealm(final List<Message> msgList, Context context){
+
         Realm realm=null;
 
         try {
@@ -27,12 +34,13 @@ public class RealmController {
                     {
                         Message msg = msgList.get(i);
 
-                        RGroup elem = realm.createObject(RGroup.class);
+                        RMessage elem = realm.createObject(RMessage.class);
                         elem.setMessage(msg.getMessage());
                         elem.setFirebaseUserID(msg.getFirebaseUserID());
                         elem.setTimeStamp(msg.getTimestamp());
-
+                        elem.setGroupID(msg.getGroupID());
                         realm.insertOrUpdate(elem);
+                        Log.e( "execute: ", msg.getMessage());
                     }
                 }
             });
@@ -40,5 +48,19 @@ public class RealmController {
             if(realm!=null)
                 realm.close();
         }
+    }
+
+    public static RealmResults<RGroup> fetchChats(String groupID){
+        Realm realm=null;
+        realm = Realm.getDefaultInstance();
+        RealmResults<RGroup> changes = realm.where(RGroup.class).equalTo("groupID",groupID).findAll();
+
+        changes.addChangeListener(new RealmChangeListener<RealmResults<RGroup>>() {
+            @Override
+            public void onChange(RealmResults<RGroup> rGroups) {
+
+            }
+        });
+        return changes;
     }
 }
