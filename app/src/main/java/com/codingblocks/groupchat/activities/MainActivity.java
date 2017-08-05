@@ -13,6 +13,7 @@ import com.codingblocks.groupchat.FirebaseReference;
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.recyclerAdapters.GroupFeedRecyclerAdapter;
 import com.codingblocks.groupchat.model.Group;
+import com.codingblocks.groupchat.model.Message;
 import com.codingblocks.groupchat.model.User;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.google.firebase.database.DataSnapshot;
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private Group createGroupFirebase(String groupName) {
         /// How to follow MVC here ?
         DatabaseReference newGroupRef = FirebaseReference.groupsReference.push();
-        Group group = new Group(groupName, newGroupRef.getKey(), "");
+        Group group = new Group(groupName, newGroupRef.getKey(), new ArrayList<Message>());
         newGroupRef.setValue(group);
         return group;
     }
