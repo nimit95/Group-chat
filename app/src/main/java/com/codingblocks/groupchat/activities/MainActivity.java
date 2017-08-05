@@ -2,6 +2,7 @@ package com.codingblocks.groupchat.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,8 +43,11 @@ public class MainActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         retrieveUser();
-        retrieveGroups();
+       // retrieveGroups();
 
+        for(Group group:usersGroupList) {
+            Log.e("nimit", "onCreate: "+ group.getGroupID() );
+        }
 
         createNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,11 +121,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void retrieveUser() {
-
+        Log.e("nimit","knm" +getFirebaseUserId());
         FirebaseReference.userReference.child(getFirebaseUserId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currentUser = dataSnapshot.getValue(User.class);
+                Log.e("retrieve user", "onDataChange: " + currentUser.getName() );
             }
 
             @Override
@@ -131,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    ;
+
 
     private String getFirebaseUserId() {
         return superPrefs.getString("user-id");
