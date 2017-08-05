@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">GroupChat</string>
-    <string name="send_msg_hint">Ask Susi Something..</string>
+    <string name="send_msg_hint">Ask Your Friends..</string>
 </resources>

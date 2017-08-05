@@ -1,9 +1,12 @@
 package com.codingblocks.groupchat.activities;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.codingblocks.groupchat.R;
@@ -25,8 +28,7 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView rvChatFeed;
     private EditText userMessage;
     private ChatFeedRecyclerAdapter chatFeedRecyclerAdapter;
-    private Realm realm = null;
-    private RealmChangeListener realmListener;
+    private FloatingActionButton buttonSend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,21 @@ public class ChatActivity extends AppCompatActivity {
     private void init() {
         rvChatFeed = (RecyclerView) findViewById(R.id.rv_chat_feed);
         userMessage = (EditText) findViewById(R.id.user_message);
+        buttonSend = (FloatingActionButton) findViewById(R.id.btn_send);
+
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String message = userMessage.getText().toString();
+                if (message != null){
+                    sendMessageToFirebase(message);
+                }
+            }
+        });
+    }
+
+    private void sendMessageToFirebase(String message) {
     }
 
     private void setupAdapter() {
@@ -47,51 +64,41 @@ public class ChatActivity extends AppCompatActivity {
         rvChatFeed.setLayoutManager(llm);
         rvChatFeed.setHasFixedSize(false);
 
+
+        List<Message> listOfMessages = getData();
+        RealmController.addToRealm(listOfMessages,this);
+
+        RealmResults<RMessage> results = RealmController.fetchChats(getGroupID());
+        chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(this, results,true);
+        rvChatFeed.setAdapter(chatFeedRecyclerAdapter);
+
+    }
+
+    String getGroupID(){
+        return "Group 1";
+    }
+    private List<Message> getData() {
         Message msg = new Message(" Piyush is user","piyush6348","12:00","Group 1");
         Message msg2 = new Message(" Nimit is user","nimitagg95","12:50","Group 2");
 
         List<Message> listOfMessages;
         listOfMessages = new ArrayList<>();
         listOfMessages.add(msg);
-        listOfMessages.add(msg2);
-        listOfMessages.add(msg2);
-        listOfMessages.add(msg2);
+        listOfMessages.add(msg);
+        listOfMessages.add(msg);
         listOfMessages.add(msg2);
         listOfMessages.add(msg);
         listOfMessages.add(msg);
-
-        realm = Realm.getDefaultInstance();
-        RealmController.addToRealm(listOfMessages,this);
-        RealmResults<RMessage> results = realm.where(RMessage.class).equalTo("groupID","Group 2").findAll();
-        chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(this, results,true);
-        rvChatFeed.setAdapter(chatFeedRecyclerAdapter);
-
+        listOfMessages.add(msg);
+        listOfMessages.add(msg2);
+        listOfMessages.add(msg);
+        listOfMessages.add(msg);
+        listOfMessages.add(msg);
+        listOfMessages.add(msg);
+        listOfMessages.add(msg);
+        listOfMessages.add(msg);
+        listOfMessages.add(msg);
+        listOfMessages.add(msg);
+        return listOfMessages;
     }
-
-    /*
-    private List<Message> fetchFromRealm() {
-        RealmResults<RGroup> result = RealmController.fetchChats("Group 1");
-
-        List<Message> res;
-        res = new ArrayList<>();
-
-        return res;
-
-
-        for( int ct = 1; ct <= result.size(); ct++)
-        {
-            RGroup grp = result.get(ct - 1);
-            Message msg = new Message(grp.getMessage(),grp.getFirebaseUserID()
-                                        ,grp.getTimeStamp(),grp.getGroupID());
-            res.add(msg);
-        }
-        return  res;
-    }
-
-    private void addToRealm(List<Message> listOfMessages) {
-        RealmController.addToRealm(listOfMessages,this);
-    }
-    private void registerRealDatabaseChangeListener() {
-
-    }*/
 }

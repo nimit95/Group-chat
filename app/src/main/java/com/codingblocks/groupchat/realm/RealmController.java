@@ -50,17 +50,10 @@ public class RealmController {
         }
     }
 
-    public static RealmResults<RGroup> fetchChats(String groupID){
+    public static RealmResults<RMessage> fetchChats(String groupID){
         Realm realm=null;
         realm = Realm.getDefaultInstance();
-        RealmResults<RGroup> changes = realm.where(RGroup.class).equalTo("groupID",groupID).findAll();
-
-        changes.addChangeListener(new RealmChangeListener<RealmResults<RGroup>>() {
-            @Override
-            public void onChange(RealmResults<RGroup> rGroups) {
-
-            }
-        });
+        RealmResults<RMessage> changes = realm.where(RMessage.class).equalTo("groupID",groupID).findAll();
         return changes;
     }
 }

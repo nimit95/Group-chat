@@ -9,14 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codingblocks.groupchat.R;
-import com.codingblocks.groupchat.adapters.viewHolders.*;
-import com.codingblocks.groupchat.model.Message;
-import com.codingblocks.groupchat.realm.RealmModels.RGroup;
+import com.codingblocks.groupchat.adapters.viewHolders.ChatViewHolder;
 import com.codingblocks.groupchat.realm.RealmModels.RMessage;
 import com.codingblocks.groupchat.utils.CONSTANTS;
 import com.codingblocks.groupchat.utils.FirebaseUserID;
-
-import java.util.List;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
@@ -25,7 +21,6 @@ import io.realm.RealmRecyclerViewAdapter;
  * Created by piyush on 5/8/17.
  */
 
-//public class ChatFeedRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder> implements CONSTANTS{
 public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, RecyclerView.ViewHolder> implements CONSTANTS{
 
     public ChatFeedRecyclerAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<RMessage> data, boolean autoUpdate) {
