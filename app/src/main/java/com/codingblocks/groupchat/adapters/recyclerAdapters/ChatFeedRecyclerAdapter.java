@@ -1,5 +1,6 @@
 package com.codingblocks.groupchat.adapters.recyclerAdapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.viewHolders.*;
 import com.codingblocks.groupchat.model.Message;
 import com.codingblocks.groupchat.utils.CONSTANTS;
+import com.codingblocks.groupchat.utils.FirebaseUserID;
 
 import java.util.List;
 
@@ -19,18 +21,20 @@ import java.util.List;
 public class ChatFeedRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder> implements CONSTANTS{
 
     List<Message> messageList;
-
-    public ChatFeedRecyclerAdapter(List<Message> messageList){
+    Context context;
+    public ChatFeedRecyclerAdapter(List<Message> messageList, Context context){
         this.messageList = messageList;
+        this.context = context;
     }
 
     @Override
     public int getItemViewType(int position) {
-        //return super.getItemViewType(position);
 
-        if(messageList.get(position).getFirebaseUserID()=="piyush6348")
-            return 1;
-        return 0;
+        String userID = FirebaseUserID.getFirebaseUserId(context);
+
+        if(messageList.get(position).getFirebaseUserID()== userID)
+            return OUR_MESSAGE;
+        return OTHERS_MESSAGE;
     }
 
     @Override
@@ -46,14 +50,11 @@ public class ChatFeedRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder
                 view = inflater.inflate(R.layout.item_susi_message,viewGroup,false);
                 return new ChatViewHolder(view,OTHERS_MESSAGE);
         }
-        //View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.message_list_row_item,parent,false);
-
         return new ChatViewHolder(null,0);
     }
 
     @Override
     public void onBindViewHolder(ChatViewHolder holder, int position) {
-        //holder.chatMsg.setText(messageList.get(position).getMessage());
         holder.timeStamp.setText(messageList.get(position).getTimestamp());
         holder.chatTextView.setText(messageList.get(position).getMessage());
 

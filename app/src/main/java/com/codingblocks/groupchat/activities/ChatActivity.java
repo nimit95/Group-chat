@@ -50,7 +50,7 @@ public class ChatActivity extends AppCompatActivity {
         listOfMessages.add(msg);
         listOfMessages.add(msg);
 
-        chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(listOfMessages);
+        chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(listOfMessages, this);
         rvChatFeed.setAdapter(chatFeedRecyclerAdapter);
     }
 }
