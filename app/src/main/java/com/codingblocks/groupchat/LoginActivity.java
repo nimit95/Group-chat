@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
     private void createNewUser(FirebaseUser currentUser,DatabaseReference mDatabase) {
         DatabaseReference users = mDatabase.child("users").push();
 
-        User user = new User(currentUser.getUid(),
+        User user = new User(users.getKey(),
                 currentUser.getDisplayName(), new ArrayList<String>());
         users.setValue(user);
 

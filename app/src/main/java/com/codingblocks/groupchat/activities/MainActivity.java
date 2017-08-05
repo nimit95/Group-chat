@@ -43,20 +43,21 @@ public class MainActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         retrieveUser();
-       // retrieveGroups();
 
-        for(Group group:usersGroupList) {
-            Log.e("nimit", "onCreate: "+ group.getGroupID() );
-        }
+
 
         createNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Create new group
+
                 Group group = createGroupFirebase(groupName.getText().toString());
 
                 //Add group to the user
                 usersGroupList.add(group);
+                for(Group g:usersGroupList) {
+                    Log.e("nimit", "onCreate: "+ g.getGroupID() );
+                }
                 saveGroupToUser();
 
 
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot elem : dataSnapshot.getChildren()) {
                     groupIDs.add(elem.getValue(String.class));
                 }
+
             }
 
             @Override
@@ -118,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+
     }
 
     private void retrieveUser() {
@@ -127,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currentUser = dataSnapshot.getValue(User.class);
                 Log.e("retrieve user", "onDataChange: " + currentUser.getName() );
+                retrieveGroups();
             }
 
             @Override
