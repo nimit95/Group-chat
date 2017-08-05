@@ -23,6 +23,16 @@ public class ChatFeedRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder
     public ChatFeedRecyclerAdapter(List<Message> messageList){
         this.messageList = messageList;
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        //return super.getItemViewType(position);
+
+        if(messageList.get(position).getFirebaseUserID()=="piyush6348")
+            return 1;
+        return 0;
+    }
+
     @Override
     public ChatViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
@@ -38,12 +48,15 @@ public class ChatFeedRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder
         }
         //View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.message_list_row_item,parent,false);
 
-        return new ChatViewHolder(view);
+        return new ChatViewHolder(null,0);
     }
 
     @Override
     public void onBindViewHolder(ChatViewHolder holder, int position) {
-        holder.chatMsg.setText(messageList.get(position).getMessage());
+        //holder.chatMsg.setText(messageList.get(position).getMessage());
+        holder.timeStamp.setText(messageList.get(position).getTimestamp());
+        holder.chatTextView.setText(messageList.get(position).getMessage());
+
     }
 
     @Override

@@ -6,5 +6,5 @@ package com.codingblocks.groupchat.utils;
 
 public interface CONSTANTS {
     int OUR_MESSAGE = 1;
-    int OTHERS_MESSAGE = 2;
+    int OTHERS_MESSAGE = 0;
 }
