@@ -60,14 +60,15 @@ public class MainActivity extends AppCompatActivity {
         createNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Create new group
-
+                //Create new group on firebase groups
                 Group group = createGroupFirebase(groupName.getText().toString());
 
                 //Add group to the user
                 usersGroupList.add(group);
+
+
                 for(Group g:usersGroupList) {
-                    Log.e("nimit", "onCreate: "+ g.getGroupID() );
+                    Log.e("nimit", "user's group are: "+ g.getGroupName() );
                 }
                 saveGroupToUser();
 
@@ -108,37 +109,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void retrieveGroups() {
-        final ArrayList<String> groupIDs = new ArrayList<>();
+
 
         Log.e("App", "retrive Group function called");
 
         FirebaseReference.userReference.child(currentUser.getUserId()).child("usersGroup").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("count",dataSnapshot.getChildrenCount()+"");
+                ArrayList<String> groupIDs = new ArrayList<>();
                 for (DataSnapshot elem : dataSnapshot.getChildren()) {
                     Log.e("dkfn",elem.getValue(String.class));
                     groupIDs.add(elem.getValue(String.class));
 
                 }
+                Log.e("groupIds count", groupIDs.size()+"");
                 groupIdToGroups(groupIDs);
-
-
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-
     }
-
     private void groupIdToGroups(ArrayList<String> groupIDs) {
-
+        for(int i=0;i<groupIDs.size();i++) {
+            Log.e("groupIdToGroups", groupIDs.get(i) );
+        }
         for (String groupId : groupIDs) {
             Log.e("group",groupId);
+            usersGroupList.clear();
             FirebaseReference.groupsReference.child(groupId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -156,14 +157,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     private void retrieveUser() {
         Log.e("nimit","knm" +getFirebaseUserId());
-        FirebaseReference.userReference.child(getFirebaseUserId()).addValueEventListener(new ValueEventListener() {
+        FirebaseReference.userReference.child(getFirebaseUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currentUser = dataSnapshot.getValue(User.class);
                 Log.e("retrieve user", "onDataChange: " + currentUser.getName() );
                 retrieveGroups();
+                FirebaseReference.userReference.child(getFirebaseUserId()).removeEventListener(this);
             }
 
             @Override
@@ -171,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 
