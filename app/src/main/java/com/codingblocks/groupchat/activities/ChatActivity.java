@@ -9,6 +9,7 @@ import android.widget.EditText;
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.recyclerAdapters.ChatFeedRecyclerAdapter;
 import com.codingblocks.groupchat.model.Message;
+import com.codingblocks.groupchat.realm.RealmController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Message msg =new Message(" Piyush is user","piyush6348","12:00");
         Message msg2 =new Message(" Nimit is user","nimitagg95","12:50");
+
         List<Message> listOfMessages;
         listOfMessages = new ArrayList<>();
         listOfMessages.add(msg);
@@ -50,7 +52,12 @@ public class ChatActivity extends AppCompatActivity {
         listOfMessages.add(msg);
         listOfMessages.add(msg);
 
+        addToRealm(listOfMessages);
         chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(listOfMessages, this);
         rvChatFeed.setAdapter(chatFeedRecyclerAdapter);
+    }
+
+    private void addToRealm(List<Message> listOfMessages) {
+        RealmController.addToRealm(listOfMessages);
     }
 }
