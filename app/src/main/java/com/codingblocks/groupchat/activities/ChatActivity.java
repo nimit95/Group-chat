@@ -44,6 +44,11 @@ public class ChatActivity extends AppCompatActivity {
         listOfMessages = new ArrayList<>();
         listOfMessages.add(msg);
         listOfMessages.add(msg2);
+        listOfMessages.add(msg2);
+        listOfMessages.add(msg2);
+        listOfMessages.add(msg2);
+        listOfMessages.add(msg);
+        listOfMessages.add(msg);
 
         chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(listOfMessages);
         rvChatFeed.setAdapter(chatFeedRecyclerAdapter);
