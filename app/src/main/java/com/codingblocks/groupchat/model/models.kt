@@ -5,9 +5,9 @@ package com.codingblocks.groupchat.model
  */
 
 
-data class Group(val groupName: String,
-                 val groupID:String,
-                 val messages:String )
+data class Group(val groupName: String ="",
+                 val groupID:String = "",
+                 val messages:ArrayList<Message> = ArrayList<Message>() )
 
 
 /*data class User(val userId:String,
