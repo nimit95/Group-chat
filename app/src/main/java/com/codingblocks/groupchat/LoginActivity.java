@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
+       // Log.e("yeh chal rha hai",currentUser.toString());
         updateUI(currentUser);
     }
 
@@ -86,41 +86,61 @@ public class LoginActivity extends AppCompatActivity {
 
             startActivity(intent);
         }
+        if(currentUser==null){
+            Log.e(TAG, "updateUI: null aa rha hasi" );
+        }
     }
 
-    private void login(FirebaseUser currentUser) {
+    private void login(final FirebaseUser currentUser) {
 
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        DatabaseReference userIdToFirebaseRef = mDatabase.child("userIdToUser").child(currentUser.getUid());
-        if(userIdToFirebaseRef==null) {
-            createNewUser(currentUser,mDatabase);
-        }
-        else {
-            getFirebaseUserId(userIdToFirebaseRef);
-        }
+        final DatabaseReference userIdToFirebaseRef = mDatabase.child("userIdToUser");
+        Log.e(TAG, "login: "+userIdToFirebaseRef.getRef() );
+
+
+       userIdToFirebaseRef.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               if(!dataSnapshot.hasChild(currentUser.getUid())){
+                   createNewUser(currentUser,mDatabase);
+               }
+               else{
+                   getFirebaseUserId(userIdToFirebaseRef.child(currentUser.getUid()));
+               }
+               updateUI(currentUser);
+           }
+
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+
+           }
+       });
 
     }
 
     private void createNewUser(FirebaseUser currentUser,DatabaseReference mDatabase) {
         DatabaseReference users = mDatabase.child("users").push();
 
-        User user = new User(currentUser.getUid(),
+        User user = new User(users.getKey(),
                 currentUser.getDisplayName(), new ArrayList<String>());
         users.setValue(user);
 
         HashMap<String, String> hm = new HashMap<>();
         hm.put(currentUser.getUid(), users.getKey());
         mDatabase.child("userIdToUser").setValue(hm);
-
-        new SuperPrefs(this).setString("user-id", users.getKey());
+        Log.e("user-id-create new", users.getKey());
+        new SuperPrefs(LoginActivity.this).setString("user-id", users.getKey());
     }
-    private void getFirebaseUserId(DatabaseReference mDatabase) {
+    private void getFirebaseUserId(DatabaseReference currentUserIdToFirebaseRef) {
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
+
+        currentUserIdToFirebaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-             //   Log.e("user-id", dataSnapshot.getValue(String.class));
+
+                //HashMap<String,String> hm = (HashMap<String, String>) dataSnapshot.getValue();
+                Log.e("user-id-getFirebase", dataSnapshot.getValue(String.class));
                 new SuperPrefs(LoginActivity.this).setString("user-id",dataSnapshot.getValue(String.class));
             }
 
@@ -163,10 +183,10 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.e(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             login(user);
-                            updateUI(user);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
