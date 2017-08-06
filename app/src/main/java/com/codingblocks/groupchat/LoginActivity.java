@@ -85,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
             startActivity(intent);
+            finish();
         }
         if(currentUser==null){
             Log.e(TAG, "updateUI: null aa rha hasi" );
@@ -109,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                    getFirebaseUserId(userIdToFirebaseRef.child(currentUser.getUid()));
                }
                updateUI(currentUser);
+               userIdToFirebaseRef.removeEventListener(this);
            }
 
            @Override
@@ -128,11 +130,11 @@ public class LoginActivity extends AppCompatActivity {
 
         HashMap<String, String> hm = new HashMap<>();
         hm.put(currentUser.getUid(), users.getKey());
-        mDatabase.child("userIdToUser").setValue(hm);
+        mDatabase.child("userIdToUser").child(currentUser.getUid()).setValue(users.getKey());
         Log.e("user-id-create new", users.getKey());
         new SuperPrefs(LoginActivity.this).setString("user-id", users.getKey());
     }
-    private void getFirebaseUserId(DatabaseReference currentUserIdToFirebaseRef) {
+    private void getFirebaseUserId(final DatabaseReference currentUserIdToFirebaseRef) {
 
 
         currentUserIdToFirebaseRef.addValueEventListener(new ValueEventListener() {
@@ -142,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                 //HashMap<String,String> hm = (HashMap<String, String>) dataSnapshot.getValue();
                 Log.e("user-id-getFirebase", dataSnapshot.getValue(String.class));
                 new SuperPrefs(LoginActivity.this).setString("user-id",dataSnapshot.getValue(String.class));
+                currentUserIdToFirebaseRef.removeEventListener(this);
             }
 
             @Override
