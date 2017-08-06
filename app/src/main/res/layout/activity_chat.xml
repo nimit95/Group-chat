@@ -65,7 +65,7 @@
             android:layout_marginRight="3dp"
             android:layout_marginEnd="3dp"
             android:clickable="true"
-            android:src="@drawable/ic_mic_white_24dp"
+            android:src="@drawable/ic_send_white_24dp"
             app:backgroundTint="@color/colorPrimary"
             app:elevation="0dp"
             app:fabSize="mini" />
