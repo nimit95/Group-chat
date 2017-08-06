@@ -23,7 +23,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -96,7 +98,8 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessageToFirebase(String message) {
-        Message obj = new Message(message, FirebaseUserID.getFirebaseUserId(this),"timestamp"
+        Message obj = new Message(message, FirebaseUserID.getFirebaseUserId(this),
+                DateFormat.getDateTimeInstance().format(new Date())
                         ,getGroupID());
         messageList.add(obj);
         FirebaseReference.groupsReference.child(getGroupID()).child("message")
@@ -116,6 +119,22 @@ public class ChatActivity extends AppCompatActivity {
         RealmResults<RMessage> results = RealmController.fetchChats(getGroupID());
         chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(this, results,true);
         rvChatFeed.setAdapter(chatFeedRecyclerAdapter);
+        rvChatFeed.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int left, int top, int right, int bottom,
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom < oldBottom) {
+                    rvChatFeed.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            int scrollTo = rvChatFeed.getAdapter().getItemCount() - 1;
+                            scrollTo = scrollTo >= 0 ? scrollTo : 0;
+                            rvChatFeed.scrollToPosition(scrollTo);
+                        }
+                    }, 10);
+                }
+            }
+        });
     }
 
     private String getGroupID(){

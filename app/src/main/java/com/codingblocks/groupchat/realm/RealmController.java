@@ -56,6 +56,7 @@ public class RealmController {
         Realm realm=null;
         realm = Realm.getDefaultInstance();
         RealmResults<RMessage> changes = realm.where(RMessage.class).equalTo("groupID",groupID).findAll();
+        //realm.close();
         return changes;
     }
     public static void clearAll() {

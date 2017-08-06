@@ -15,7 +15,9 @@ import com.codingblocks.groupchat.utils.CONSTANTS;
 import com.codingblocks.groupchat.utils.FirebaseUserID;
 
 import io.realm.OrderedRealmCollection;
+import io.realm.RealmChangeListener;
 import io.realm.RealmRecyclerViewAdapter;
+import io.realm.RealmResults;
 
 /**
  * Created by piyush on 5/8/17.
@@ -23,8 +25,45 @@ import io.realm.RealmRecyclerViewAdapter;
 
 public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, RecyclerView.ViewHolder> implements CONSTANTS{
 
+    private int lastMsgCount;
+    private RecyclerView recyclerView;
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        this.recyclerView = null;
+    }
+
     public ChatFeedRecyclerAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<RMessage> data, boolean autoUpdate) {
         super(context, data, autoUpdate);
+
+        lastMsgCount = getItemCount();
+        RealmChangeListener<RealmResults> listener = new RealmChangeListener<RealmResults>() {
+            @Override
+            public void onChange(RealmResults elements) {
+                //only scroll if new is added.
+                if (lastMsgCount < getItemCount()) {
+                    scrollToBottom();
+                }
+                lastMsgCount = getItemCount();
+            }
+        };
+        if (data instanceof RealmResults) {
+            RealmResults realmResults = (RealmResults) data;
+            realmResults.addChangeListener(listener);
+        }
+    }
+
+    private void scrollToBottom() {
+        if (getData() != null && !getData().isEmpty() && recyclerView != null) {
+            recyclerView.smoothScrollToPosition(getItemCount() - 1);
+        }
     }
 
     @Override
