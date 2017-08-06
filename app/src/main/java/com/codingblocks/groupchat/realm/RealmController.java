@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.codingblocks.groupchat.model.Message;
 import com.codingblocks.groupchat.realm.RealmModels.RGroup;
+import com.codingblocks.groupchat.realm.RealmModels.RGroupList;
 import com.codingblocks.groupchat.realm.RealmModels.RMessage;
 
 import java.util.List;
@@ -19,13 +20,14 @@ import io.realm.RealmResults;
 
 public class RealmController {
 
-    public static void addToRealm(final List<Message> msgList, Context context){
+    public static void addToRealm(final List<Message> msgList, Context context, String groupID){
 
         Realm realm=null;
 
         try {
             realm = Realm.getDefaultInstance();
 
+            //RealmResults realmResults = realm.where(RGroupList.class)
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {

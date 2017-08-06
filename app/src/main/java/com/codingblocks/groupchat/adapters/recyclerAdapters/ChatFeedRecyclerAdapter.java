@@ -48,7 +48,7 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
                 view = inflater.inflate(R.layout.item_user_message,viewGroup,false);
                 return new ChatViewHolder(view,OUR_MESSAGE);
             case OTHERS_MESSAGE:
-                view = inflater.inflate(R.layout.item_susi_message,viewGroup,false);
+                view = inflater.inflate(R.layout.item_others_message,viewGroup,false);
                 return new ChatViewHolder(view,OTHERS_MESSAGE);
         }
         return new ChatViewHolder(null,0);

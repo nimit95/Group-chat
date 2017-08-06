@@ -1,5 +1,6 @@
 package com.codingblocks.groupchat.activities;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.codingblocks.groupchat.FirebaseReference;
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.recyclerAdapters.ChatFeedRecyclerAdapter;
 import com.codingblocks.groupchat.model.Message;
@@ -29,10 +31,15 @@ public class ChatActivity extends AppCompatActivity {
     private EditText userMessage;
     private ChatFeedRecyclerAdapter chatFeedRecyclerAdapter;
     private FloatingActionButton buttonSend;
+
+    private String groupId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        Intent intent = getIntent();
+        groupId = intent.getStringExtra("group_id");
 
         init();
         setupAdapter();
@@ -50,12 +57,15 @@ public class ChatActivity extends AppCompatActivity {
                 String message = userMessage.getText().toString();
                 if (message != null){
                     sendMessageToFirebase(message);
+                    userMessage.setText("");
                 }
             }
         });
     }
 
     private void sendMessageToFirebase(String message) {
+        FirebaseReference.groupsReference.child(getGroupID()).child("message")
+                .setValue(message);
     }
 
     private void setupAdapter() {
@@ -66,17 +76,17 @@ public class ChatActivity extends AppCompatActivity {
 
 
         List<Message> listOfMessages = getData();
-        RealmController.addToRealm(listOfMessages,this);
+        RealmController.addToRealm(listOfMessages,this, getGroupID());
 
         RealmResults<RMessage> results = RealmController.fetchChats(getGroupID());
         chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(this, results,true);
         rvChatFeed.setAdapter(chatFeedRecyclerAdapter);
-
     }
 
-    String getGroupID(){
-        return "Group 1";
+    private String getGroupID(){
+        return groupId;
     }
+
     private List<Message> getData() {
         Message msg = new Message(" Piyush is user","piyush6348","12:00","Group 1");
         Message msg2 = new Message(" Nimit is user","nimitagg95","12:50","Group 2");
