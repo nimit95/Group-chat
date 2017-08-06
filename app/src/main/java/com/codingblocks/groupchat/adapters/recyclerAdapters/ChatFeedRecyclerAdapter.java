@@ -33,7 +33,7 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
 
         RMessage rMessage = getData().get(position);
 
-        if(rMessage.getFirebaseUserID()== userID)
+        if(rMessage.getFirebaseUserID().compareTo( userID)==0)
             return OUR_MESSAGE;
         return OTHERS_MESSAGE;
     }

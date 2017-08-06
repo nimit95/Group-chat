@@ -58,4 +58,21 @@ public class RealmController {
         RealmResults<RMessage> changes = realm.where(RMessage.class).equalTo("groupID",groupID).findAll();
         return changes;
     }
+    public static void clearAll() {
+        Realm realm=null;
+        try {
+            realm = Realm.getDefaultInstance();
+
+            //RealmResults realmResults = realm.where(RGroupList.class)
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.delete(RMessage.class);
+                }
+            });
+        }finally {
+            if(realm!=null)
+                realm.close();
+        }
+    }
 }

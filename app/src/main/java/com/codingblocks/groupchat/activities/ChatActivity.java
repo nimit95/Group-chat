@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,10 @@ import com.codingblocks.groupchat.model.Message;
 import com.codingblocks.groupchat.realm.RealmController;
 import com.codingblocks.groupchat.realm.RealmModels.RGroup;
 import com.codingblocks.groupchat.realm.RealmModels.RMessage;
+import com.codingblocks.groupchat.utils.FirebaseUserID;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +36,9 @@ public class ChatActivity extends AppCompatActivity {
     private EditText userMessage;
     private ChatFeedRecyclerAdapter chatFeedRecyclerAdapter;
     private FloatingActionButton buttonSend;
+    private ArrayList<Message> messageList;
 
+    List<Message> listOfMessages;
     private String groupId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +47,34 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         groupId = intent.getStringExtra("group_id");
+        messageList = new ArrayList<>();
 
         init();
         setupAdapter();
+        setUpListener();
+    }
+
+    private void setUpListener() {
+
+        FirebaseReference.groupsReference.child(getGroupID()).child("message").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                messageList.clear();
+                for(DataSnapshot messageShot:dataSnapshot.getChildren()) {
+                    messageList.add(messageShot.getValue(Message.class));
+                    Log.e("onDataChange: ", messageList.get(messageList.size()-1).getMessage());
+                }
+
+                listOfMessages = messageList;
+                RealmController.clearAll();
+                RealmController.addToRealm(listOfMessages,ChatActivity.this, getGroupID());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void init() {
@@ -64,8 +96,11 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessageToFirebase(String message) {
+        Message obj = new Message(message, FirebaseUserID.getFirebaseUserId(this),"timestamp"
+                        ,getGroupID());
+        messageList.add(obj);
         FirebaseReference.groupsReference.child(getGroupID()).child("message")
-                .setValue(message);
+                .setValue(messageList);
     }
 
     private void setupAdapter() {
@@ -75,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
         rvChatFeed.setHasFixedSize(false);
 
 
-        List<Message> listOfMessages = getData();
+        listOfMessages = getData();
         RealmController.addToRealm(listOfMessages,this, getGroupID());
 
         RealmResults<RMessage> results = RealmController.fetchChats(getGroupID());
