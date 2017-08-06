@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.codingblocks.groupchat.FirebaseReference;
 import com.codingblocks.groupchat.R;
@@ -26,12 +27,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseReference mDatabase;
+
     private SuperPrefs superPrefs;
     private ArrayList<Group> usersGroupList;
     private User currentUser;
     private RecyclerView groupFeedRecyclerView;
     private GroupFeedRecyclerAdapter groupFeedRecyclerAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         superPrefs = new SuperPrefs(this);
         usersGroupList = new ArrayList<>();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
         groupFeedRecyclerView = (RecyclerView) findViewById(R.id.group_feed_recycler);
         groupFeedRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -81,9 +84,50 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                String groupId = groupName.getText().toString();
+
+                if(checkAlreadyadded(groupId)){
+                    Toast.makeText(MainActivity.this, "Already added to this group", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
+                    //if not alread added
+                    checkAndInFirebase(groupId);
+                    groupName.setText("");
+                }
+
             }
         });
 
+    }
+    private boolean checkAlreadyadded(String groupId) {
+        for(Group group : usersGroupList) {
+            if(group.getGroupID().compareToIgnoreCase(groupId)==0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void checkAndInFirebase(String groupId) {
+
+        FirebaseReference.groupsReference.child(groupId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    usersGroupList.add(dataSnapshot.getValue(Group.class));
+                    saveGroupToUser();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Wrong goupID", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void addGroupsToView() {
