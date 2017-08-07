@@ -9,7 +9,12 @@
         android:id="@+id/group_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="10dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
         android:hint="Group 1"
         android:textSize="@dimen/dimen_20dp" />
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/holo_blue_dark"/>
 </LinearLayout>

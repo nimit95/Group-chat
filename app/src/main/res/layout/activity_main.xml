@@ -1,25 +1,25 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="10"
+
     tools:context="com.codingblocks.groupchat.activities.MainActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/group_feed_recycler"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_height="match_parent"
+
         android:scrollbars="vertical" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_weight="1"
+        android:layout_alignBottom="@+id/group_feed_recycler"
         android:orientation="horizontal">
 
         <EditText
@@ -42,4 +42,4 @@
             android:text="Join Group" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

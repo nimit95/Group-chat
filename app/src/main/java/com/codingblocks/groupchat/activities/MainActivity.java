@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private User currentUser;
     private RecyclerView groupFeedRecyclerView;
     private GroupFeedRecyclerAdapter groupFeedRecyclerAdapter;
+    private EditText groupName;
 
 
     @Override
@@ -40,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Button createNewGroup, joinGroup;
-        final EditText groupName;
 
         createNewGroup = (Button) findViewById(R.id.create_new_group);
         joinGroup = (Button) findViewById(R.id.join_group);
@@ -64,19 +64,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Create new group on firebase groups
-                Group group = createGroupFirebase(groupName.getText().toString());
 
-                //Add group to the user
-                usersGroupList.add(group);
-
-
-                for(Group g:usersGroupList) {
-                    Log.e("nimit", "user's group are: "+ g.getGroupName() );
+                if(groupName.getText().toString().compareTo("")==0){
+                    Toast.makeText(MainActivity.this,"Enter a group name",Toast.LENGTH_SHORT).show();
                 }
-                saveGroupToUser();
+                else {
+                    Group group = createGroupFirebase(groupName.getText().toString());
+
+                    //Add group to the user
+                    usersGroupList.add(group);
 
 
-                groupName.setText("");
+                    for (Group g : usersGroupList) {
+                        Log.e("nimit", "user's group are: " + g.getGroupName());
+                    }
+                    saveGroupToUser();
+
+
+                    groupName.setText("");
+                }
             }
         });
 
@@ -93,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     //if not alread added
                     checkAndInFirebase(groupId);
-                    groupName.setText("");
+
                 }
 
             }
@@ -109,14 +115,16 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void checkAndInFirebase(String groupId) {
+    private void checkAndInFirebase(final String groupId) {
 
         FirebaseReference.groupsReference.child(groupId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if(dataSnapshot.getValue()!=null) {
                     usersGroupList.add(dataSnapshot.getValue(Group.class));
                     saveGroupToUser();
+                    groupName.setText("");
+                    FirebaseReference.groupsReference.child(groupId).removeEventListener(this);
                 }
                 else{
                     Toast.makeText(MainActivity.this, "Wrong goupID", Toast.LENGTH_SHORT).show();
@@ -183,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         }
         for (String groupId : groupIDs) {
             Log.e("group",groupId);
+            final String finalGroupID = groupId;
             usersGroupList.clear();
             FirebaseReference.groupsReference.child(groupId).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -191,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                     usersGroupList.add(dataSnapshot.getValue(Group.class));
                     Log.e("list size", usersGroupList.size() + "");
                     refreshGroup();
+                    FirebaseReference.groupsReference.child(finalGroupID).removeEventListener(this);
                 }
 
                 @Override
@@ -199,7 +209,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+/*        FirebaseReference.groupsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                usersGroupList.clear();
+                for(DataSnapshot groupShot:dataSnapshot.getChildren()) {
+                    usersGroupList.add(groupShot.getValue(Group.class));
+                }
+                refreshGroup();
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
     }
 
     private void retrieveUser() {
