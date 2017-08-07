@@ -89,7 +89,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String message = userMessage.getText().toString();
-                if (message != null){
+                if (message.length() > 0 ){
                     sendMessageToFirebase(message);
                     userMessage.setText("");
                 }
