@@ -32,8 +32,10 @@ public class RealmController {
                 @Override
                 public void execute(Realm realm) {
 
+                    //RealmResults realmResults = realm.where(RGroupList.class).
                     for(int i=0;i<msgList.size();i++)
                     {
+
                         Message msg = msgList.get(i);
 
                         RMessage elem = realm.createObject(RMessage.class);
