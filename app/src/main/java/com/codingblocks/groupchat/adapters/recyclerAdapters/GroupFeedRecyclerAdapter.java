@@ -12,6 +12,7 @@ import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.activities.ChatActivity;
 import com.codingblocks.groupchat.adapters.viewHolders.GroupViewHolder;
 import com.codingblocks.groupchat.model.Group;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -47,8 +48,11 @@ public class GroupFeedRecyclerAdapter extends RecyclerView.Adapter<GroupViewHold
 
     @Override
     public void onBindViewHolder(GroupViewHolder holder, int position) {
-        holder.groupName.setText(groupList.get(position).getGroupName());
-
+        String groupName = groupList.get(position).getGroupName();
+        groupName = Character.toUpperCase(groupName.charAt(0)) + groupName.substring(1);
+        holder.groupName.setText(groupName);
+        //holder.groupImg
+        Picasso.with(context).load("http://via.placeholder.com/45x45").into(holder.groupImg);
     }
 
     @Override
