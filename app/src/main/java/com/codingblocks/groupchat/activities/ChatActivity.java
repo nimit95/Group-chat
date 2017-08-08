@@ -102,8 +102,10 @@ public class ChatActivity extends AppCompatActivity {
                 DateFormat.getDateTimeInstance().format(new Date())
                         ,getGroupID());
         messageList.add(obj);
-        FirebaseReference.groupsReference.child(getGroupID()).child("message")
-                .setValue(messageList);
+        /*FirebaseReference.groupsReference.child(getGroupID()).child("message")
+                .setValue(messageList);*/
+
+        FirebaseReference.groupsReference.child(getGroupID()).child("message").push().setValue(obj);
     }
 
     private void setupAdapter() {
