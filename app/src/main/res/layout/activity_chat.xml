@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <!--<TextView
             android:id="@+id/date"
             android:layout_width="100dp"
             android:layout_height="30dp"
@@ -18,14 +18,12 @@
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_layout_cyan"
             android:gravity="center"
-            android:hint="oct 4 , 2016" />
+            android:hint="oct 4 , 2016" />-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_chat_feed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/date"
-            android:layout_marginTop="35dp"
             android:layout_marginBottom="65dp"
             android:scrollbars="vertical" />
 
@@ -50,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:ems="17"
             android:layout_weight="1"
             android:hint="@string/send_msg_hint"
             android:imeOptions="actionSend"
