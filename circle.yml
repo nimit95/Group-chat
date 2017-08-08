@@ -17,6 +17,13 @@ dependencies:
         - chmod +x gradlew
     override:
         - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-26.0.1,android-26,extra-google-m2repository,extra-google-google_play_services,extra-android-support
+        - echo y | android update sdk --no-ui --filter "android-25,build-tools-25.0.2"
+        - echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
+        - echo y | android update sdk --no-ui --all --filter "android-25, build-tools-25.0.2"
+        - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
+        - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
+        - echo y | android update sdk --no-ui --all --filter "addon-google_apis-google-25"
+        - echo y | android update sdk --no-ui --all --filter "extra-android-support"
         - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
@@ -24,6 +31,3 @@ test:
         - (./gradlew assemble):
             timeout: 360
 
-checkout:
-    post:
-        - cp -r licenses/. $ANDROID_HOME/licenses
