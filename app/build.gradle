@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
+apply plugin: 'jacoco-everywhere'
+
 
 android {
     compileSdkVersion 26
@@ -49,7 +51,6 @@ dependencies {
     compile 'io.github.yavski:fab-speed-dial:1.0.6'
     testCompile 'junit:junit:4.12'
 }
-
 
 
 apply plugin: 'com.google.gms.google-services'

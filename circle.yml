@@ -16,14 +16,38 @@ dependencies:
     pre:
         - chmod +x gradlew
     override:
+
         - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-26.0.1,android-26,extra-google-m2repository,extra-google-google_play_services,extra-android-support
+        - echo y | android update sdk --no-ui --filter "android-25,build-tools-25.0.2"
+        - echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
+        - echo y | android update sdk --no-ui --all --filter "android-25, build-tools-25.0.2"
+        - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
+        - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
+        - echo y | android update sdk --no-ui --all --filter "addon-google_apis-google-25"
+        - echo y | android update sdk --no-ui --all --filter "extra-android-support"
         - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
+    pre:
+    # start the emulator
+    #    - android create avd --force -n test -t android-21 --abi armeabi-v7a
+        - emulator -avd circleci-android22 -no-window:
+            background: true
+            parallel: true
+
     override:
         - (./gradlew assemble):
             timeout: 360
+        - (./gradlew jacocoTestReport):
+            timeout: 720
 
+        # run tests  against the emulator after waiting.
+        #    - "adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'"
+        - circle-android wait-for-boot:
+            timeout: 720
+        - ./gradlew connectedCheck
+    post:
+        - bash <(curl -s https://codecov.io/bash)
 checkout:
     post:
         - cp -r licenses/. $ANDROID_HOME/licenses
