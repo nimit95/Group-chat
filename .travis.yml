@@ -39,6 +39,8 @@ before_script:
   - emulator -avd test -no-skin -no-window &
   - android-wait-for-emulator
   - chmod +x gradlew
+  - mkdir -p "$ANDROID_HOME/licenses"
+  - cp ./android-licenses/ "$ANDROID_HOME/licenses/"
   - adb shell input keyevent 82 &
 script:
    - ./gradlew connectedCheck
