@@ -48,4 +48,4 @@ test:
         - bash <(curl -s https://codecov.io/bash)
 checkout:
     post:
-        - cp -r licenses/. $ANDROID_HOME/licenses
+        - cp -r android-licenses/. $ANDROID_HOME/licenses
