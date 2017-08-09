@@ -1,5 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     ext.support_lib_version = '26.+'
     ext.firebase_version= '11.0.4'
@@ -15,9 +14,10 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.trickyandroid:jacoco-everywhere:0.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "io.realm:realm-gradle-plugin:$realm_version"
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'com.trickyandroid:jacoco-everywhere:0.2.1'
     }
 }
 
@@ -25,8 +25,4 @@ allprojects {
     repositories {
         jcenter()
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
