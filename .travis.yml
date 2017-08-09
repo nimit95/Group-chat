@@ -31,19 +31,21 @@ android:
  - addon-google_apis-google-$TARGET_SDK # google play services
  - sys-img-$ANDROID_ABI-addon-google_apis-google-$EMULATOR_API
 licenses:
-  - android-sdk-preview-license-.+
+  - android-sdk-preview-license-52d11cd2
+  - android-sdk-license-c81a61d9
   - android-sdk-license-.+
   - google-gdk-license-.+
 before_script:
   - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi $ANDROID_ABI
   - emulator -avd test -no-skin -no-window &
   - android-wait-for-emulator
-  - chmod +x gradlew
   - mkdir -p "$ANDROID_HOME/licenses"
   - cp ./licenses/ "$ANDROID_HOME/licenses/"
   - adb shell input keyevent 82 &
 script:
    - ./gradlew connectedCheck
+before_install:
+   - "chmod +x gradlew"
 after_success:
    - bash <(curl -s https://codecov.io/bash)
 before_cache:
