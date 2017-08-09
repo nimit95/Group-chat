@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +27,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         superPrefs = new SuperPrefs(this);
         usersGroupList = new ArrayList<>();
 
+        setUpFAB();
 
         groupFeedRecyclerView = (RecyclerView) findViewById(R.id.group_feed_recycler);
         groupFeedRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -106,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     private boolean checkAlreadyadded(String groupId) {
         for(Group group : usersGroupList) {
             if(group.getGroupID().compareToIgnoreCase(groupId)==0) {
@@ -141,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
     private void addGroupsToView() {
         groupFeedRecyclerView.setAdapter(groupFeedRecyclerAdapter);
     }
+
     private void refreshGroup() {
         groupFeedRecyclerAdapter.notifyDataSetChanged();
     }
@@ -151,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
         newGroupRef.setValue(group);
         return group;
     }
-
     private void saveGroupToUser() {
         ArrayList<String> groupIDs = new ArrayList<>();
         for (int i = 0; i < usersGroupList.size(); i++)
@@ -185,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void groupIdToGroups(ArrayList<String> groupIDs) {
         for(int i=0;i<groupIDs.size();i++) {
             Log.e("groupIdToGroups", groupIDs.get(i) );
@@ -225,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
     }
-
     private void retrieveUser() {
         Log.e("nimit","knm" +getFirebaseUserId());
         FirebaseReference.userReference.child(getFirebaseUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -245,10 +254,49 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
     private String getFirebaseUserId() {
         return superPrefs.getString("user-id");
+    }
+
+
+
+    private void setUpFAB() {
+        FabSpeedDial fabSpeedDial = (FabSpeedDial) findViewById(R.id.fab_speed_dial);
+        fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                //TODO: Start some activity
+                switch (menuItem.getItemId()) {
+                    case
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_activity, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.settings:
+                //newGame();
+                return true;
+            case R.id.help:
+                //showHelp();
+                return true;
+            case R.id.feedback:
+                return true;
+            case R.id.sign_out:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
