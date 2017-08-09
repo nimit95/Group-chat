@@ -261,13 +261,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setUpFAB() {
-        FabSpeedDial fabSpeedDial = (FabSpeedDial) findViewById(R.id.fab_speed_dial);
+        FabSpeedDial fabSpeedDial = (FabSpeedDial) findViewById(R.id.fab);
         fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
                 //TODO: Start some activity
                 switch (menuItem.getItemId()) {
-                    case
+                    case 0:
+                        return true;
                 }
                 return true;
             }
