@@ -28,9 +28,26 @@ dependencies:
         - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
+    pre:
+    # start the emulator
+    #    - android create avd --force -n test -t android-21 --abi armeabi-v7a
+        - emulator -avd circleci-android22 -no-window:
+            background: true
+            parallel: true
+
     override:
         - (./gradlew assemble):
             timeout: 360
+        - (./gradlew jacocoTestReport):
+            timeout: 720
+
+        # run tests  against the emulator after waiting.
+        #    - "adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'"
+        - circle-android wait-for-boot:
+            timeout: 720
+        - ./gradlew connectedCheck
+    post:
+        - bash <(curl -s https://codecov.io/bash)
 checkout:
     post:
         - cp -r licenses/. $ANDROID_HOME/licenses
