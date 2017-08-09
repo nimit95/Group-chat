@@ -38,8 +38,6 @@ test:
     override:
         - (./gradlew assemble):
             timeout: 360
-        - (./gradlew jacocoTestReport):
-            timeout: 720
 
         # run tests  against the emulator after waiting.
         #    - "adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'"
