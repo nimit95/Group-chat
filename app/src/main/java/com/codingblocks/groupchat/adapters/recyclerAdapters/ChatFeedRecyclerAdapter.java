@@ -102,7 +102,7 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
 
         RMessage message = getData().get(position);
 
-        chatViewHolder.timeStamp.setText(message.getTimeStamp());
+        chatViewHolder.timeStamp.setText(message.getTimeStamp().split(" ")[1]);
         chatViewHolder.chatTextView.setText(message.getMessage());
 
     }}

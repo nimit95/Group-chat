@@ -1,5 +1,6 @@
 package com.codingblocks.groupchat.activities;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.codingblocks.groupchat.FirebaseReference;
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.recyclerAdapters.GroupFeedRecyclerAdapter;
+import com.codingblocks.groupchat.fragment.CreateAddDialogFragment;
 import com.codingblocks.groupchat.model.Group;
 import com.codingblocks.groupchat.model.Message;
 import com.codingblocks.groupchat.model.User;
@@ -40,18 +42,15 @@ public class MainActivity extends AppCompatActivity {
     private User currentUser;
     private RecyclerView groupFeedRecyclerView;
     private GroupFeedRecyclerAdapter groupFeedRecyclerAdapter;
-    private EditText groupName;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final Button createNewGroup, joinGroup;
 
-        createNewGroup = (Button) findViewById(R.id.create_new_group);
-        joinGroup = (Button) findViewById(R.id.join_group);
-        groupName = (EditText) findViewById(R.id.group_name);
+
+
 
         superPrefs = new SuperPrefs(this);
         usersGroupList = new ArrayList<>();
@@ -68,53 +67,38 @@ public class MainActivity extends AppCompatActivity {
 
         addGroupsToView();
 
-        createNewGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Create new group on firebase groups
-
-                if(groupName.getText().toString().compareTo("")==0){
-                    Toast.makeText(MainActivity.this,"Enter a group name",Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Group group = createGroupFirebase(groupName.getText().toString());
-
-                    //Add group to the user
-                    usersGroupList.add(group);
-
-
-                    for (Group g : usersGroupList) {
-                        Log.e("nimit", "user's group are: " + g.getGroupName());
-                    }
-                    saveGroupToUser();
-
-
-                    groupName.setText("");
-                }
-            }
-        });
-
-        joinGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String groupId = groupName.getText().toString();
-
-                if(checkAlreadyadded(groupId)){
-                    Toast.makeText(MainActivity.this, "Already added to this group", Toast.LENGTH_SHORT).show();
-                }
-
-                else {
-                    //if not alread added
-                    checkAndInFirebase(groupId);
-
-                }
-
-            }
-        });
 
     }
+    public void createGroup(String groupName) {
+        if(groupName.trim().compareToIgnoreCase("")==0){
+            invalidDetail();
+            return;
+        }
+        Group group = createGroupFirebase(groupName.trim());
 
+        //Add group to the user
+        usersGroupList.add(group);
+
+
+        for (Group g : usersGroupList) {
+            Log.e("nimit", "user's group are: " + g.getGroupName());
+        }
+        saveGroupToUser();
+    }
+
+    public void joinGroup(String groupId) {
+
+
+        if(groupId.trim().compareToIgnoreCase("")==0)
+            invalidDetail();
+        else if(checkAlreadyadded(groupId))
+            invalidDetail();
+        else {
+            //if not alread added
+            checkAndInFirebase(groupId);
+
+        }
+    }
     private boolean checkAlreadyadded(String groupId) {
         for(Group group : usersGroupList) {
             if(group.getGroupID().compareToIgnoreCase(groupId)==0) {
@@ -132,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 if(dataSnapshot.getValue()!=null) {
                     usersGroupList.add(dataSnapshot.getValue(Group.class));
                     saveGroupToUser();
-                    groupName.setText("");
                     FirebaseReference.groupsReference.child(groupId).removeEventListener(this);
                 }
                 else{
@@ -195,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void groupIdToGroups(ArrayList<String> groupIDs) {
+    private void groupIdToGroups(final ArrayList<String> groupIDs) {
         for(int i=0;i<groupIDs.size();i++) {
             Log.e("groupIdToGroups", groupIDs.get(i) );
         }
@@ -209,8 +192,11 @@ public class MainActivity extends AppCompatActivity {
                     //Add elements to usersGroupList
                     usersGroupList.add(dataSnapshot.getValue(Group.class));
                     Log.e("list size", usersGroupList.size() + "");
-                    refreshGroup();
                     FirebaseReference.groupsReference.child(finalGroupID).removeEventListener(this);
+                    if(usersGroupList.size()==groupIDs.size()) {
+
+                        refreshGroup();
+                    }
                 }
 
                 @Override
@@ -219,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
 /*        FirebaseReference.groupsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -261,13 +248,26 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setUpFAB() {
-        FabSpeedDial fabSpeedDial = (FabSpeedDial) findViewById(R.id.fab);
+        FabSpeedDial fabSpeedDial = (FabSpeedDial) findViewById(R.id.fab_special);
+        final FragmentManager fm = getSupportFragmentManager();
+
         fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
                 //TODO: Start some activity
+                CreateAddDialogFragment alertDialog;
                 switch (menuItem.getItemId()) {
-                    case 0:
+                    case R.id.new_group:
+
+                       alertDialog =
+                                CreateAddDialogFragment.newInstance("Create","");
+                        alertDialog.show(fm, "fragment_alert");
+                        return true;
+                    case R.id.join_group:
+                        FragmentManager fm = getSupportFragmentManager();
+                        alertDialog =
+                                CreateAddDialogFragment.newInstance("Join","");
+                        alertDialog.show(fm, "fragment_alert");
                         return true;
                 }
                 return true;
@@ -299,5 +299,7 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
+    private void invalidDetail() {
+        Toast.makeText(MainActivity.this, "Enter a group name",Toast.LENGTH_SHORT).show();
+    }
 }

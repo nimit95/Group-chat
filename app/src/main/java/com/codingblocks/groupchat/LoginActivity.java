@@ -132,7 +132,10 @@ public class LoginActivity extends AppCompatActivity {
         hm.put(currentUser.getUid(), users.getKey());
         mDatabase.child("userIdToUser").child(currentUser.getUid()).setValue(users.getKey());
         Log.e("user-id-create new", users.getKey());
-        new SuperPrefs(LoginActivity.this).setString("user-id", users.getKey());
+
+        SuperPrefs pref = new SuperPrefs(LoginActivity.this);
+        pref.setString("user-id", users.getKey());
+        pref.setString("user-name", user.getName());
     }
     private void getFirebaseUserId(final DatabaseReference currentUserIdToFirebaseRef) {
 

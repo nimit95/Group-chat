@@ -100,7 +100,7 @@ public class ChatActivity extends AppCompatActivity {
     private void sendMessageToFirebase(String message) {
         Message obj = new Message(message, FirebaseUserID.getFirebaseUserId(this),
                 DateFormat.getDateTimeInstance().format(new Date())
-                        ,getGroupID());
+                        ,getGroupID(), FirebaseUserID.getUserName(this));
         messageList.add(obj);
         /*FirebaseReference.groupsReference.child(getGroupID()).child("message")
                 .setValue(messageList);*/
@@ -144,8 +144,8 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private List<Message> getData() {
-        Message msg = new Message(" Piyush is user","piyush6348","12:00","Group 1");
-        Message msg2 = new Message(" Nimit is user","nimitagg95","12:50","Group 2");
+        Message msg = new Message(" Piyush is user","piyush6348","12:00","Group 1","Piyush");
+        Message msg2 = new Message(" Nimit is user","nimitagg95","12:50","Group 2", "Nimit");
 
         List<Message> listOfMessages;
         listOfMessages = new ArrayList<>();

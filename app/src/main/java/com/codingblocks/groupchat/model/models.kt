@@ -17,4 +17,5 @@ data class Group(val groupName: String ="",
 data class Message(val message: String ="",
                    val firebaseUserID: String="",
                    val timestamp: String="",
-                   val groupID: String="")
+                   val groupID: String="",
+                    val userName: String="")

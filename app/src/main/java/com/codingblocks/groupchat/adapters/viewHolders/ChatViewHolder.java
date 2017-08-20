@@ -16,6 +16,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
 
     public TextView chatTextView;
     public TextView timeStamp;
+    public TextView senderName;
     public ChatMessageView chatMessage;
 
     public ChatViewHolder(View itemView,int viewType) {
@@ -24,5 +25,6 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
         chatTextView = (TextView) itemView.findViewById(R.id.text);
         timeStamp = (TextView) itemView.findViewById(R.id.timestamp);
         chatMessage = (ChatMessageView) itemView.findViewById(R.id.chatMessageView);
+        senderName = (TextView) itemView.findViewById(R.id.sender_name);
     }
 }
