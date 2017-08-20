@@ -11,25 +11,23 @@ import java.util.ArrayList;
                 val Name: String,
                 val usersGroup:ArrayList<String>)*/
 public class User {
-    String userId, name;
-    ArrayList<String> usersGroup;
+    private String userId, name;
+    private ArrayList<String> usersGroup;
 
+    private Location location;
     public User(){
 
     }
-    public User(String userId, String name) {
-        this.userId = userId;
-        this.name = name;
 
-    }
-
-    public User(String userId, String name, ArrayList<String> usersGroup) {
+    public User(String userId, String name, ArrayList<String> usersGroup, Location location) {
         this.userId = userId;
         this.name = name;
         this.usersGroup = usersGroup;
+        this.location = location;
     }
 
     public String getUserId() {
+
         return userId;
     }
 
@@ -51,5 +49,13 @@ public class User {
 
     public void setUsersGroup(ArrayList<String> usersGroup) {
         this.usersGroup = usersGroup;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

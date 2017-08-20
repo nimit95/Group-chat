@@ -1,16 +1,20 @@
 package com.codingblocks.groupchat;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.codingblocks.groupchat.activities.MainActivity;
-import com.codingblocks.groupchat.model.Group;
+import com.codingblocks.groupchat.location.CurrentLocation;
+import com.codingblocks.groupchat.location.GeoFireSetUp;
+import com.codingblocks.groupchat.model.Location;
 import com.codingblocks.groupchat.model.User;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.google.android.gms.auth.api.Auth;
@@ -42,6 +46,36 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mAuth;
+    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1001;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    CurrentLocation currentLocation = new CurrentLocation(LoginActivity.this);
+                    currentLocation.setCurrentLocationAndMoveToNextActivity();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    askForPermission();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                 signIn();
             }
         });
+        askForPermission();
     }
 
     @Override
@@ -82,14 +117,27 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            //askForPermission();
 
-            startActivity(intent);
-            finish();
+            //askForPermission();
+            if(isLocationPresent())
+                startMainActivity();
         }
         if(currentUser==null){
-            Log.e(TAG, "updateUI: null aa rha hasi" );
+            Log.e(TAG, "updateUI: null aa rha hai" );
         }
+    }
+    private void startMainActivity(){
+
+
+        GeoFireSetUp geoFireSetUp = new GeoFireSetUp(LoginActivity.this);
+        geoFireSetUp.setUpGeoFire();
+
+        SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
+        Log.e(TAG, "longitude from Prefs "+prefs.getString("lon") );
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void login(final FirebaseUser currentUser) {
@@ -104,7 +152,11 @@ public class LoginActivity extends AppCompatActivity {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
                if(!dataSnapshot.hasChild(currentUser.getUid())){
-                   createNewUser(currentUser,mDatabase);
+
+                   if(isLocationPresent())
+                       createNewUser(currentUser,mDatabase);
+//                   else
+//                       askForPermission();
                }
                else{
                    getFirebaseUserId(userIdToFirebaseRef.child(currentUser.getUid()));
@@ -120,12 +172,23 @@ public class LoginActivity extends AppCompatActivity {
        });
 
     }
+    Boolean isLocationPresent(){
+        SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
 
+        if(!prefs.stringExists("lat"))
+            return false;
+        return true;
+    }
     private void createNewUser(FirebaseUser currentUser,DatabaseReference mDatabase) {
         DatabaseReference users = mDatabase.child("users").push();
 
+        SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
+        Location location = new Location(prefs.getString("lon"),prefs.getString("lat"));
+        //Location location = new Location("0","0");
         User user = new User(users.getKey(),
-                currentUser.getDisplayName(), new ArrayList<String>());
+                currentUser.getDisplayName(), new ArrayList<String>(),
+                location);
+
         users.setValue(user);
 
         HashMap<String, String> hm = new HashMap<>();
@@ -136,6 +199,9 @@ public class LoginActivity extends AppCompatActivity {
         SuperPrefs pref = new SuperPrefs(LoginActivity.this);
         pref.setString("user-id", users.getKey());
         pref.setString("user-name", user.getName());
+
+
+        // askForPermission();
     }
     private void getFirebaseUserId(final DatabaseReference currentUserIdToFirebaseRef) {
 
@@ -206,5 +272,31 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    private void askForPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
 
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
 }
