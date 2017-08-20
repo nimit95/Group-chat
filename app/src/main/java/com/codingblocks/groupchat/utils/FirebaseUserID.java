@@ -15,4 +15,9 @@ public class FirebaseUserID {
         SuperPrefs superPrefs = new SuperPrefs(context);
         return superPrefs.getString("user-id");
     }
+
+    public static String getUserName(Context context) {
+        SuperPrefs superPrefs = new SuperPrefs(context);
+        return superPrefs.getString("user-name");
+    }
 }

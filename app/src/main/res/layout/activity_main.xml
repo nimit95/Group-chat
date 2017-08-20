@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,41 +16,16 @@
         android:scrollbars="vertical" />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_alignBottom="@+id/group_feed_recycler"
-        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/group_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="7"
-            android:hint="Enter Group Name" />
-
-        <Button
-            android:id="@+id/create_new_group"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Create Group" />
-
-        <Button
-            android:id="@+id/join_group"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Join Group" />
-    </LinearLayout>
 
     <io.github.yavski.fabspeeddial.FabSpeedDial
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/fab"
+        android:id="@+id/fab_special"
         android:layout_gravity="bottom|end"
         app:fabGravity="bottom_end"
         app:fabMenu="@menu/menu_main"
         app:miniFabBackgroundTint="@android:color/white"
         app:miniFabDrawableTint="?attr/colorPrimaryDark"
         app:miniFabTitleTextColor="?attr/colorPrimaryDark" />
-</RelativeLayout>
+</FrameLayout>

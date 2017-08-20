@@ -22,30 +22,43 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
+
         android:minWidth="@dimen/messagelayout_minwidth"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text=""
+            android:layout_height="wrap_content" android:layout_weight="5"
             android:autoLink="web"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/md_white_1000"
+            android:textColor="@android:color/black"
             android:textSize="@dimen/message_text_size"
-            tools:text="Hello!" />
+            android:maxWidth="250dp"
+            android:fontFamily="sans-serif-light"
+            tools:text="a" />
+        <FrameLayout
+            android:layout_width="40dp"
+            android:minWidth="10dp"
+            android:layout_gravity="bottom"
 
+            android:layout_height="wrap_content">
         <TextView
             android:id="@+id/timestamp"
+
+            android:maxLines="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/md_blue_grey_50"
-            android:textSize="@dimen/timestamp_size"
-            tools:text="05:32 PM" />
+            android:gravity="end|bottom"
 
+            android:text=""
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#7C8864"
+            android:textSize="@dimen/timestamp_size"
+            tools:text="5:32 PM" />
+        </FrameLayout>
     </LinearLayout>
 
 </me.himanshusoni.chatmessageview.ChatMessageView>
