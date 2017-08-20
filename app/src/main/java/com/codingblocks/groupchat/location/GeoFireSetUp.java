@@ -38,7 +38,8 @@ public class GeoFireSetUp implements CONSTANTS{
         geoFire = new GeoFire(locationReference);
 
         superPrefs = new SuperPrefs(context);
-        locationReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        locationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Location newLocation = dataSnapshot.getValue(Location.class);
@@ -51,7 +52,7 @@ public class GeoFireSetUp implements CONSTANTS{
                 geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
                     public void onKeyEntered(String key, GeoLocation location) {
-
+                        print("Entered the method");
                     }
 
                     @Override
@@ -59,12 +60,14 @@ public class GeoFireSetUp implements CONSTANTS{
                         Location location = new Location(superPrefs.getString(LONGITUDE_KEY_FIREBASE),
                                 superPrefs.getString(LATTITUDE_KEY_FIREBASE));
                         locationReference.setValue(location);
+                        print("onKeyExited");
                     }
 
                     @Override
                     public void onKeyMoved(String key, GeoLocation location) {
                         superPrefs.setString(LONGITUDE_KEY_FIREBASE,String.valueOf(location.longitude));
                         superPrefs.setString(LATTITUDE_KEY_FIREBASE,String.valueOf(location.latitude));
+                        print("onKeyMoved");
                     }
 
                     @Override
@@ -84,5 +87,9 @@ public class GeoFireSetUp implements CONSTANTS{
 
             }
         });
+    }
+    public void print(String method){
+        superPrefs = new SuperPrefs(context);
+        Log.e(method,"lattitude" + superPrefs.getString(LATTITUDE_KEY_FIREBASE) );
     }
 }
