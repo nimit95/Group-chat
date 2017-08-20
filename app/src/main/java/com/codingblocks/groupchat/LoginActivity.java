@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codingblocks.groupchat.activities.MainActivity;
+import com.codingblocks.groupchat.location.CurrentLocation;
 import com.codingblocks.groupchat.model.Group;
 import com.codingblocks.groupchat.model.User;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
@@ -82,13 +83,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-            startActivity(intent);
-            finish();
+            CurrentLocation currentLocation = new CurrentLocation(LoginActivity.this);
+            currentLocation.setCurrentLocationAndMoveToNextActivity();
         }
         if(currentUser==null){
-            Log.e(TAG, "updateUI: null aa rha hasi" );
+            Log.e(TAG, "updateUI: null aa rha hai" );
         }
     }
 
