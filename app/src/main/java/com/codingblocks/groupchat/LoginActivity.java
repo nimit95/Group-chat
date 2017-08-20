@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.codingblocks.groupchat.activities.MainActivity;
 import com.codingblocks.groupchat.location.CurrentLocation;
+import com.codingblocks.groupchat.location.GeoFireSetUp;
 import com.codingblocks.groupchat.model.Location;
 import com.codingblocks.groupchat.model.User;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
@@ -57,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
+
                     CurrentLocation currentLocation = new CurrentLocation(LoginActivity.this);
                     currentLocation.setCurrentLocationAndMoveToNextActivity();
 
@@ -117,16 +119,19 @@ public class LoginActivity extends AppCompatActivity {
         if (currentUser != null) {
             //askForPermission();
 
+            //askForPermission();
             if(isLocationPresent())
                 startMainActivity();
-            else
-                askForPermission();
         }
         if(currentUser==null){
             Log.e(TAG, "updateUI: null aa rha hai" );
         }
     }
     private void startMainActivity(){
+
+
+        GeoFireSetUp geoFireSetUp = new GeoFireSetUp(LoginActivity.this);
+        geoFireSetUp.setUpGeoFire();
 
         SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
         Log.e(TAG, "longitude from Prefs "+prefs.getString("lon") );
@@ -150,8 +155,8 @@ public class LoginActivity extends AppCompatActivity {
 
                    if(isLocationPresent())
                        createNewUser(currentUser,mDatabase);
-                   else
-                       askForPermission();
+//                   else
+//                       askForPermission();
                }
                else{
                    getFirebaseUserId(userIdToFirebaseRef.child(currentUser.getUid()));
@@ -179,6 +184,7 @@ public class LoginActivity extends AppCompatActivity {
 
         SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
         Location location = new Location(prefs.getString("lon"),prefs.getString("lat"));
+        //Location location = new Location("0","0");
         User user = new User(users.getKey(),
                 currentUser.getDisplayName(), new ArrayList<String>(),
                 location);
@@ -193,6 +199,9 @@ public class LoginActivity extends AppCompatActivity {
         SuperPrefs pref = new SuperPrefs(LoginActivity.this);
         pref.setString("user-id", users.getKey());
         pref.setString("user-name", user.getName());
+
+
+        // askForPermission();
     }
     private void getFirebaseUserId(final DatabaseReference currentUserIdToFirebaseRef) {
 
