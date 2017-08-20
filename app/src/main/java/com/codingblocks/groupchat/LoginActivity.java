@@ -1,22 +1,19 @@
 package com.codingblocks.groupchat;
 
-import android.*;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.codingblocks.groupchat.activities.MainActivity;
 import com.codingblocks.groupchat.location.CurrentLocation;
-import com.codingblocks.groupchat.model.Group;
+import com.codingblocks.groupchat.model.Location;
 import com.codingblocks.groupchat.model.User;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.google.android.gms.auth.api.Auth;
@@ -36,7 +33,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Logger;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -181,8 +177,12 @@ public class LoginActivity extends AppCompatActivity {
     private void createNewUser(FirebaseUser currentUser,DatabaseReference mDatabase) {
         DatabaseReference users = mDatabase.child("users").push();
 
+        SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
+        Location location = new Location(prefs.getString("lon"),prefs.getString("lat"));
         User user = new User(users.getKey(),
-                currentUser.getDisplayName(), new ArrayList<String>());
+                currentUser.getDisplayName(), new ArrayList<String>(),
+                location);
+
         users.setValue(user);
 
         HashMap<String, String> hm = new HashMap<>();
