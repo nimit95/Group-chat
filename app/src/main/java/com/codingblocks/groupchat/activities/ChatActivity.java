@@ -2,26 +2,34 @@ package com.codingblocks.groupchat.activities;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.codingblocks.groupchat.FirebaseReference;
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.recyclerAdapters.ChatFeedRecyclerAdapter;
+import com.codingblocks.groupchat.model.GifyNetworkData;
 import com.codingblocks.groupchat.model.Message;
+import com.codingblocks.groupchat.network.GifyTrendingGifInterface;
 import com.codingblocks.groupchat.realm.RealmController;
 import com.codingblocks.groupchat.realm.RealmModels.RGroup;
 import com.codingblocks.groupchat.realm.RealmModels.RMessage;
+import com.codingblocks.groupchat.utils.CONSTANTS;
 import com.codingblocks.groupchat.utils.FirebaseUserID;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -31,6 +39,11 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -39,6 +52,8 @@ public class ChatActivity extends AppCompatActivity {
     private ChatFeedRecyclerAdapter chatFeedRecyclerAdapter;
     private FloatingActionButton buttonSend;
     private ArrayList<Message> messageList;
+    private SlidingUpPanelLayout slidingPanelLayout;
+    private LinearLayout chatBarLinearLayout;
 
     List<Message> listOfMessages;
     private String groupId;
@@ -77,6 +92,59 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
+        userMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.e( "onextChanged: ", charSequence.toString());
+                if(charSequence.toString().compareToIgnoreCase("@gify")==0) {
+                    slidingPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    GifyTrendingGifInterface gifyTrending = GifyTrendingGifInterface.retrofit.create(GifyTrendingGifInterface.class);
+                    Call<GifyNetworkData> call= gifyTrending.getGifyTrendingGif();
+
+                    call.enqueue(new Callback<GifyNetworkData>() {
+                        @Override
+                        public void onResponse(Call<GifyNetworkData> call, Response<GifyNetworkData> response) {
+
+                            Log.e( "onResponse: ",response.body().getGifyDataList().get(0).getGifyImages().getFixedWidthGif().getGifUrl());
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<GifyNetworkData> call, Throwable t) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        slidingPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+               // 9gag, xkcd, gify
+
+
+                if(newState==SlidingUpPanelLayout.PanelState.COLLAPSED && previousState!=SlidingUpPanelLayout.PanelState.EXPANDED) {
+
+                }
+            }
+        });
     }
 
     private void init() {
@@ -84,6 +152,12 @@ public class ChatActivity extends AppCompatActivity {
         userMessage = (EditText) findViewById(R.id.user_message);
         buttonSend = (FloatingActionButton) findViewById(R.id.btn_send);
 
+
+        slidingPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        slidingPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        chatBarLinearLayout = (LinearLayout) findViewById(R.id.send_message_layout);
+        chatBarLinearLayout.bringToFront();
+        //chatBarLinearLayout.setZ((float) 5.0);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,5 +240,20 @@ public class ChatActivity extends AppCompatActivity {
         listOfMessages.add(msg);
         listOfMessages.add(msg);
         return listOfMessages;
+    }
+
+    @Override
+    public void onBackPressed() {
+       // super.onBackPressed();
+        Log.e("onBackPressed: ", "back clicked");
+        if(slidingPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.COLLAPSED
+                || slidingPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.EXPANDED
+                || slidingPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.DRAGGING){
+            slidingPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        }
+        else{
+            super.onBackPressed();
+        }
+
     }
 }

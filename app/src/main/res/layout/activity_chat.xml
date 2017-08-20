@@ -1,73 +1,131 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator_layout"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoDragView="@+id/dragView"
+    sothree:umanoOverlay="true"
+    sothree:umanoPanelHeight="100dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoScrollableView="@+id/list"
+    sothree:umanoShadowHeight="4dp">
 
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <!--<TextView
-            android:id="@+id/date"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/rounded_layout_cyan"
-            android:gravity="center"
-            android:hint="oct 4 , 2016" />-->
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_chat_feed"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="65dp"
-            android:scrollbars="vertical" />
+            android:orientation="vertical">
 
-    </RelativeLayout>
+            <!--<TextView
+                android:id="@+id/date"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rounded_layout_cyan"
+                android:gravity="center"
+                android:hint="oct 4 , 2016" />-->
 
-    <LinearLayout
-        android:id="@+id/send_message_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/rounded_layout"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom"
-        android:padding="5dp">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_chat_feed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="65dp"
+                android:scrollbars="vertical" />
 
-        <EditText
-            android:id="@+id/user_message"
-            android:layout_width="0dp"
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/send_message_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:ems="17"
-            android:layout_weight="1"
-            android:hint="@string/send_msg_hint"
-            android:imeOptions="actionSend"
-            android:inputType="text"
-            android:background="@android:color/transparent"
-            android:theme="@style/sendMessageEditTextTheme"/>
+
+            android:background="@drawable/rounded_layout"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <EditText
+                android:id="@+id/user_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:ems="17"
+                android:hint="@string/send_msg_hint"
+                android:imeOptions="actionSend"
+                android:inputType="text"
+                android:theme="@style/sendMessageEditTextTheme" />
 
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btn_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="3dp"
-            android:layout_marginEnd="3dp"
-            android:clickable="true"
-            android:src="@drawable/ic_send_white_24dp"
-            app:backgroundTint="@color/colorPrimary"
-            app:elevation="0dp"
-            app:fabSize="mini" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
+                android:layout_marginRight="3dp"
+                android:clickable="true"
+                android:src="@drawable/ic_send_white_24dp"
+                app:backgroundTint="@color/colorPrimary"
+                app:elevation="0dp"
+                app:fabSize="mini" />
 
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+    <!-- SLIDING LAYOUT -->
+    <LinearLayout
+        android:id="@+id/dragView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+
+        android:clickable="true"
+        android:focusable="false"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:text="shi aa rha hai"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/follow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|right"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
