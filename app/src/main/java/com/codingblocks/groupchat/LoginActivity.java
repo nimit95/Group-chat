@@ -130,9 +130,13 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void startMainActivity(){
 
-
-        GeoFireSetUp geoFireSetUp = new GeoFireSetUp(LoginActivity.this);
+/*
+        GeoFireSetUp geoFireSetUp = new GeoFireSetUp(LoginActivity.this,);
         geoFireSetUp.setUpGeoFire();
+*/
+        Intent intentForService =new Intent(LoginActivity.this,GeoFireSetUp.class);
+        startService(intentForService);
+
 
         SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
         Log.e(TAG, "longitude from Prefs "+prefs.getString("lon") );

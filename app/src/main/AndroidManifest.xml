@@ -31,6 +31,9 @@
             </intent-filter>
         </service>
 
+        <service android:name=".location.GeoFireSetUp"
+            android:exported="false"/>
+
         <activity android:name=".activities.ChatActivity"></activity>
         <activity android:name=".activities.PlacesActivity">
         </activity>

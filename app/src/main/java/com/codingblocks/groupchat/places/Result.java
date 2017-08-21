@@ -1,7 +1,12 @@
 
-package com.codingblocks.groupchat;
+package com.codingblocks.groupchat.places;
 
 import java.util.List;
+
+import com.codingblocks.groupchat.Geometry;
+import com.codingblocks.groupchat.OpeningHours;
+import com.codingblocks.groupchat.Photo;
+import com.codingblocks.groupchat.places.*;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

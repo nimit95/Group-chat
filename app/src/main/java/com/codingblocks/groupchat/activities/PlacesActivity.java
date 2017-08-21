@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.codingblocks.groupchat.R;
+import com.codingblocks.groupchat.network.PlacesApiInterface;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.codingblocks.groupchat.utils.CONSTANTS;
 import com.codingblocks.groupchat.utils.DataParser;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import retrofit2.Call;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -88,6 +90,11 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
     }
 
     public void getPlaces() {
+
+        PlacesApiInterface placesApiInterface = PlacesApiInterface.retrofit.create(PlacesApiInterface.class);
+
+
+        /*
         Observable<String> observable = Observable.fromCallable(new Callable<String>() {
             @Override
             public String call() throws Exception {
@@ -123,7 +130,7 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
 
                         showNearbyPlaces(nearbyPlacesList);
                     }
-                });
+                });*/
     }
 }
 
