@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codingblocks.groupchat.activities.MainActivity;
+import com.codingblocks.groupchat.activities.PlacesActivity;
 import com.codingblocks.groupchat.location.CurrentLocation;
 import com.codingblocks.groupchat.location.GeoFireSetUp;
 import com.codingblocks.groupchat.model.Location;
@@ -135,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
 
         SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
         Log.e(TAG, "longitude from Prefs "+prefs.getString("lon") );
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, PlacesActivity.class);
         startActivity(intent);
         finish();
     }
