@@ -7,6 +7,11 @@ package com.codingblocks.groupchat.utils;
 public interface CONSTANTS {
     int OUR_MESSAGE = 1;
     int OTHERS_MESSAGE = 0;
+    int MESSAGE_TYPE_TEXT = 0;
+    int MESSAGE_TYPE_IMG = 1;
+    int MESSAGE_TYPE_GIF = 2;
+    int MESSAGE_TYPE_VIDEO =3;
+
     String BASE_URL_GIFY = "http://api.giphy.com";
     String LOCATION_KEY_FIREBASE="location";
     String LONGITUDE_KEY_FIREBASE="lon";

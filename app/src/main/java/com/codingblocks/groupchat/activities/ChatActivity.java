@@ -5,11 +5,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +23,7 @@ import android.widget.LinearLayout;
 import com.codingblocks.groupchat.FirebaseReference;
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.recyclerAdapters.ChatFeedRecyclerAdapter;
+import com.codingblocks.groupchat.adapters.recyclerAdapters.SearchedImagesRecyclerAdapter;
 import com.codingblocks.groupchat.model.GifyNetworkData;
 import com.codingblocks.groupchat.model.Message;
 import com.codingblocks.groupchat.network.GifyTrendingGifInterface;
@@ -45,9 +51,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.codingblocks.groupchat.utils.CONSTANTS.MESSAGE_TYPE_GIF;
+import static com.codingblocks.groupchat.utils.CONSTANTS.MESSAGE_TYPE_TEXT;
+
 public class ChatActivity extends AppCompatActivity {
 
-    private RecyclerView rvChatFeed;
+    private RecyclerView rvChatFeed, imageGifSearch;
     private EditText userMessage;
     private ChatFeedRecyclerAdapter chatFeedRecyclerAdapter;
     private FloatingActionButton buttonSend;
@@ -112,6 +121,12 @@ public class ChatActivity extends AppCompatActivity {
                         public void onResponse(Call<GifyNetworkData> call, Response<GifyNetworkData> response) {
 
                             Log.e( "onResponse: ",response.body().getGifyDataList().get(0).getGifyImages().getFixedWidthGif().getGifUrl());
+                            ArrayList<String> url = new ArrayList<String>();
+                            for(int i=0;i<response.body().getGifyDataList().size();i++) {
+                                url.add(response.body().getGifyDataList().get(i).getGifyImages().getFixedWidthGif().getGifUrl());
+                            }
+                            Log.e("onResponse: ", "url list size" + url.size());
+                            imageGifSearch.setAdapter(new SearchedImagesRecyclerAdapter(url,ChatActivity.this, MESSAGE_TYPE_GIF));
 
                         }
 
@@ -141,7 +156,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
                 if(newState==SlidingUpPanelLayout.PanelState.COLLAPSED && previousState!=SlidingUpPanelLayout.PanelState.EXPANDED) {
-
+                    Log.e( "onPanelStateChanged: ", "working on initial opening");
                 }
             }
         });
@@ -149,6 +164,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void init() {
         rvChatFeed = (RecyclerView) findViewById(R.id.rv_chat_feed);
+        imageGifSearch = (RecyclerView) findViewById(R.id.searched_images);
         userMessage = (EditText) findViewById(R.id.user_message);
         buttonSend = (FloatingActionButton) findViewById(R.id.btn_send);
 
@@ -164,17 +180,19 @@ public class ChatActivity extends AppCompatActivity {
 
                 String message = userMessage.getText().toString();
                 if (message.length() > 0 ){
-                    sendMessageToFirebase(message);
+                    sendMessageToFirebase(message, MESSAGE_TYPE_TEXT);
                     userMessage.setText("");
                 }
             }
         });
     }
 
-    private void sendMessageToFirebase(String message) {
+
+
+    public void sendMessageToFirebase(String message, int type) {
         Message obj = new Message(message, FirebaseUserID.getFirebaseUserId(this),
                 DateFormat.getDateTimeInstance().format(new Date())
-                        ,getGroupID(), FirebaseUserID.getUserName(this));
+                        ,getGroupID(), FirebaseUserID.getUserName(this),type);
         messageList.add(obj);
         /*FirebaseReference.groupsReference.child(getGroupID()).child("message")
                 .setValue(messageList);*/
@@ -188,6 +206,8 @@ public class ChatActivity extends AppCompatActivity {
         rvChatFeed.setLayoutManager(llm);
         rvChatFeed.setHasFixedSize(false);
 
+        imageGifSearch.setLayoutManager(new GridLayoutManager(this,3));
+        imageGifSearch.setHasFixedSize(false);
 
         listOfMessages = getData();
         RealmController.addToRealm(listOfMessages,this, getGroupID());
@@ -218,8 +238,8 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private List<Message> getData() {
-        Message msg = new Message(" Piyush is user","piyush6348","12:00","Group 1","Piyush");
-        Message msg2 = new Message(" Nimit is user","nimitagg95","12:50","Group 2", "Nimit");
+        Message msg = new Message(" Piyush is user","piyush6348","12:00","Group 1","Piyush",0);
+        Message msg2 = new Message(" Nimit is user","nimitagg95","12:50","Group 2", "Nimit",0);
 
         List<Message> listOfMessages;
         listOfMessages = new ArrayList<>();
@@ -256,4 +276,38 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_chat_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.share_group:
+                //newGame();
+                shareGroup();
+                return true;
+            case R.id.plan_outing:
+                return true;
+            case R.id.help:
+                //showHelp();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void shareGroup() {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,  getGroupID() );
+        //startActivity(Intent.createChooser(sharingIntent, "select app ..."));
+        startActivity(sharingIntent);
+    }
+
 }
