@@ -22,14 +22,13 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Subscription;
 
 
 public class PlacesActivity extends FragmentActivity implements OnConnectionFailedListener, CONSTANTS {
     private GoogleApiClient mGoogleApiClient;
     private SuperPrefs prefs;
     private String PROXIMITY_RADIUS = "10000";
-    Subscription subscription;
+    //Subscription subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,7 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
         mGoogleApiClient.connect();
 
 
-        getPlaces();
+        getPlaces("restaurant");
     }
 
     @Override
@@ -67,11 +66,11 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
         return url;
     }
 
-    public void getPlaces() {
+    public void getPlaces(String nearbyPlace) {
 
         // Places API Async API call.
         PlacesApiInterface placesApiInterface = PlacesApiInterface.retrofit.create(PlacesApiInterface.class);
-        Call<PlacesApiResult> call = placesApiInterface.placesApiResult(getURL("restaurant"));
+        Call<PlacesApiResult> call = placesApiInterface.placesApiResult(getURL(nearbyPlace));
 
         call.enqueue(new Callback<PlacesApiResult>() {
             @Override

@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
 
         SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
         Log.e(TAG, "longitude from Prefs "+prefs.getString("lon") );
-        Intent intent = new Intent(LoginActivity.this, PlacesActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
