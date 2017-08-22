@@ -57,7 +57,7 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
         String longitude = prefs.getString(LONGITUDE_KEY_FIREBASE);
         String lattitude = prefs.getString(LATTITUDE_KEY_FIREBASE);
 
-        String url =PLACES_API_BASE_URL+"json?"+
+        String url ="json?"+
                 "location=" + lattitude + "," + longitude +
                 "&radius=" + PROXIMITY_RADIUS +
                 "&type=" + nearbyPlace +
