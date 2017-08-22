@@ -300,6 +300,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void invalidDetail() {
-        Toast.makeText(MainActivity.this, "Enter a group name",Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Enter a valid group name",Toast.LENGTH_SHORT).show();
     }
 }
