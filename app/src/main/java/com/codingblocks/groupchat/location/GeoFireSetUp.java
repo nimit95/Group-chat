@@ -1,6 +1,11 @@
 package com.codingblocks.groupchat.location;
 
+
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.codingblocks.groupchat.FirebaseReference;
@@ -21,15 +26,12 @@ import com.google.firebase.database.ValueEventListener;
  * Created by piyush on 20/8/17.
  */
 
-public class GeoFireSetUp implements CONSTANTS{
+public class GeoFireSetUp extends Service implements CONSTANTS{
     private Context context;
     private SuperPrefs superPrefs;
     private GeoFire geoFire;
     private DatabaseReference locationReference;
 
-    public GeoFireSetUp(Context context){
-        this.context = context;
-    }
     public void setUpGeoFire(){
 
         String userId = FirebaseUserID.getFirebaseUserId(context);
@@ -91,5 +93,20 @@ public class GeoFireSetUp implements CONSTANTS{
     public void print(String method){
         superPrefs = new SuperPrefs(context);
         Log.e(method,"lattitude" + superPrefs.getString(LATTITUDE_KEY_FIREBASE) );
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        //return super.onStartCommand(intent, flags, startId);
+        context = getApplicationContext();
+        setUpGeoFire();
+        return Service.START_STICKY;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        setUpGeoFire();
+        return null;
     }
 }

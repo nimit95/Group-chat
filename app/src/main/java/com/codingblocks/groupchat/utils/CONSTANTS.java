@@ -16,4 +16,6 @@ public interface CONSTANTS {
     String LOCATION_KEY_FIREBASE="location";
     String LONGITUDE_KEY_FIREBASE="lon";
     String LATTITUDE_KEY_FIREBASE="lat";
+    String PLACES_API_BASE_URL ="https://maps.googleapis.com/maps/api/place/nearbysearch/";
+    String PLACES_KEY="AIzaSyAgLoEr4UJs1JUYu6GckG0nKUYDpo2BR8k";
 }

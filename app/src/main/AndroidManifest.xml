@@ -3,8 +3,8 @@
     package="com.codingblocks.groupchat">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:name=".FirebaseReference"
         android:allowBackup="true"
@@ -13,10 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDanxgtyZ5-C7EM4uhbAZ7qLScXcvsS8Fs" />
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,8 +31,11 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.ChatActivity">
+        <service android:name=".location.GeoFireSetUp"
+            android:exported="false"/>
 
+        <activity android:name=".activities.ChatActivity"></activity>
+        <activity android:name=".activities.PlacesActivity">
         </activity>
     </application>
 
