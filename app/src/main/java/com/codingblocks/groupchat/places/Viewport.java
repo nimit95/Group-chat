@@ -1,7 +1,6 @@
 
 package com.codingblocks.groupchat.places;
 
-import com.codingblocks.groupchat.Northeast;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

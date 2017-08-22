@@ -130,11 +130,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void startMainActivity(){
 
-/*
-        GeoFireSetUp geoFireSetUp = new GeoFireSetUp(LoginActivity.this,);
-        geoFireSetUp.setUpGeoFire();
-*/
-        Intent intentForService =new Intent(LoginActivity.this,GeoFireSetUp.class);
+      Intent intentForService =new Intent(LoginActivity.this,GeoFireSetUp.class);
         startService(intentForService);
 
 

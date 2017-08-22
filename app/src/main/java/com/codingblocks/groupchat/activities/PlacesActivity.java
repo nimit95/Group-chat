@@ -7,26 +7,22 @@ import android.util.Log;
 
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.network.PlacesApiInterface;
+import com.codingblocks.groupchat.places.PlacesApiResult;
+import com.codingblocks.groupchat.places.Result;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.codingblocks.groupchat.utils.CONSTANTS;
-import com.codingblocks.groupchat.utils.DataParser;
-import com.codingblocks.groupchat.utils.UrlConnection;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.places.Places;
 
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import retrofit2.Call;
-import rx.Observable;
-import rx.Observer;
+import retrofit2.Callback;
+import retrofit2.Response;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class PlacesActivity extends FragmentActivity implements OnConnectionFailedListener, CONSTANTS {
@@ -50,25 +46,6 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
 
 
         getPlaces();
-        // Background Thread
-//        UrlConnection urlConnection = new UrlConnection();
-//        String changedURL = urlConnection.readUrl(getURL("Nearby Place"));
-
-
-        // UI Thread
-    }
-
-    private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlacesList) {
-
-        for (int i = 0; i < nearbyPlacesList.size(); i++) {
-            HashMap<String, String> googlePlace = nearbyPlacesList.get(i);
-            double lat = Double.parseDouble(googlePlace.get("lat"));
-            double lng = Double.parseDouble(googlePlace.get("lng"));
-            String placeName = googlePlace.get("place_name");
-            String vicinity = googlePlace.get("vicinity");
-
-            Log.e("showNearbyPlaces: ", placeName + vicinity);
-        }
     }
 
     @Override
@@ -80,20 +57,45 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
         String longitude = prefs.getString(LONGITUDE_KEY_FIREBASE);
         String lattitude = prefs.getString(LATTITUDE_KEY_FIREBASE);
 
-        String url = PLACES_API_BASE_URL +
+        String url =PLACES_API_BASE_URL+"json?"+
                 "location=" + lattitude + "," + longitude +
                 "&radius=" + PROXIMITY_RADIUS +
                 "&type=" + nearbyPlace +
                 "&sensor=true" +
                 "&key=" + PLACES_KEY;
+        Log.e("getURL: ",PLACES_API_BASE_URL+url );
         return url;
     }
 
     public void getPlaces() {
 
+        // Places API Async API call.
         PlacesApiInterface placesApiInterface = PlacesApiInterface.retrofit.create(PlacesApiInterface.class);
+        Call<PlacesApiResult> call = placesApiInterface.placesApiResult(getURL("restaurant"));
 
+        call.enqueue(new Callback<PlacesApiResult>() {
+            @Override
+            public void onResponse(Call<PlacesApiResult> call, Response<PlacesApiResult> response) {
+                    //PlacesApiResult obj = call.execute().body();
 
+                List<Result> resultList;
+                if(response.body() == null)
+                    Log.e("onResponse: null ", response.errorBody().toString());
+                else{
+                    Log.e("onResponse: ", "obtained"+response.body());
+                    resultList = response.body().getResults();
+
+                    for (int i = 0; i < resultList.size(); i++) {
+                        Log.e("Name " + resultList.get(i).getName(),
+                                "vicinity " + resultList.get(i).getVicinity());
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<PlacesApiResult> call, Throwable t) {
+                Log.e("onFailure: ", t.getMessage());
+            }
+        });
         /*
         Observable<String> observable = Observable.fromCallable(new Callable<String>() {
             @Override
