@@ -61,7 +61,7 @@ public class ChatActivity extends AppCompatActivity {
     private ChatFeedRecyclerAdapter chatFeedRecyclerAdapter;
     private FloatingActionButton buttonSend;
     private ArrayList<Message> messageList;
-    private SlidingUpPanelLayout slidingPanelLayout;
+    public SlidingUpPanelLayout slidingPanelLayout;
     private LinearLayout chatBarLinearLayout;
 
     List<Message> listOfMessages;
@@ -113,28 +113,7 @@ public class ChatActivity extends AppCompatActivity {
                 Log.e( "onextChanged: ", charSequence.toString());
                 if(charSequence.toString().compareToIgnoreCase("@gify")==0) {
                     slidingPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    GifyTrendingGifInterface gifyTrending = GifyTrendingGifInterface.retrofit.create(GifyTrendingGifInterface.class);
-                    Call<GifyNetworkData> call= gifyTrending.getGifyTrendingGif();
-
-                    call.enqueue(new Callback<GifyNetworkData>() {
-                        @Override
-                        public void onResponse(Call<GifyNetworkData> call, Response<GifyNetworkData> response) {
-
-                            Log.e( "onResponse: ",response.body().getGifyDataList().get(0).getGifyImages().getFixedWidthGif().getGifUrl());
-                            ArrayList<String> url = new ArrayList<String>();
-                            for(int i=0;i<response.body().getGifyDataList().size();i++) {
-                                url.add(response.body().getGifyDataList().get(i).getGifyImages().getFixedWidthGif().getGifUrl());
-                            }
-                            Log.e("onResponse: ", "url list size" + url.size());
-                            imageGifSearch.setAdapter(new SearchedImagesRecyclerAdapter(url,ChatActivity.this, MESSAGE_TYPE_GIF));
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<GifyNetworkData> call, Throwable t) {
-
-                        }
-                    });
+                    getandDisplayGifs();
                 }
             }
 
@@ -206,7 +185,7 @@ public class ChatActivity extends AppCompatActivity {
         rvChatFeed.setLayoutManager(llm);
         rvChatFeed.setHasFixedSize(false);
 
-        imageGifSearch.setLayoutManager(new GridLayoutManager(this,3));
+        imageGifSearch.setLayoutManager(new StaggeredGridLayoutManager(3,1));
         imageGifSearch.setHasFixedSize(false);
 
         listOfMessages = getData();
@@ -310,4 +289,29 @@ public class ChatActivity extends AppCompatActivity {
         startActivity(sharingIntent);
     }
 
+
+    private void getandDisplayGifs() {
+        GifyTrendingGifInterface gifyTrending = GifyTrendingGifInterface.retrofit.create(GifyTrendingGifInterface.class);
+        Call<GifyNetworkData> call= gifyTrending.getGifyTrendingGif();
+
+        call.enqueue(new Callback<GifyNetworkData>() {
+            @Override
+            public void onResponse(Call<GifyNetworkData> call, Response<GifyNetworkData> response) {
+
+               // Log.e( "onResponse: ",response.body().getGifyDataList().size()+"");
+                ArrayList<String> url = new ArrayList<String>();
+                for(int i=0;i<response.body().getGifyDataList().size();i++) {
+                    url.add(response.body().getGifyDataList().get(i).getGifyImages().getFixedWidthGif().getGifUrl());
+                }
+                Log.e("onResponse: ", "url list size" + url.size());
+                imageGifSearch.setAdapter(new SearchedImagesRecyclerAdapter(url,ChatActivity.this, MESSAGE_TYPE_GIF));
+
+            }
+
+            @Override
+            public void onFailure(Call<GifyNetworkData> call, Throwable t) {
+
+            }
+        });
+    }
 }

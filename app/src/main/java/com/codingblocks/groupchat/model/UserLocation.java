@@ -4,11 +4,11 @@ package com.codingblocks.groupchat.model;
  * Created by piyush on 20/8/17.
  */
 
-public class Location {
+public class UserLocation {
     private String lon,lat;
 
-    public Location(){}
-    public Location(String lon, String lat) {
+    public UserLocation(){}
+    public UserLocation(String lon, String lat) {
         this.lon = lon;
         this.lat = lat;
     }

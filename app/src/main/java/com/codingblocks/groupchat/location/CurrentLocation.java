@@ -13,6 +13,7 @@ import android.util.Log;
 import com.codingblocks.groupchat.FirebaseReference;
 import com.codingblocks.groupchat.LoginActivity;
 import com.codingblocks.groupchat.activities.MainActivity;
+import com.codingblocks.groupchat.model.UserLocation;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.codingblocks.groupchat.utils.CONSTANTS;
 import com.codingblocks.groupchat.utils.FirebaseUserID;
@@ -20,44 +21,51 @@ import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 /**
  * Created by piyush on 20/8/17.
  */
 
-public class CurrentLocation implements CONSTANTS{
+public class CurrentLocation implements CONSTANTS {
 
     private Context context;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LoginActivity loginActivityReference;
     private DatabaseReference locationReference;
 
-    public CurrentLocation(Context context){
+    public CurrentLocation(Context context) {
         this.context = context;
-        loginActivityReference = (LoginActivity) ((Activity)context);
+        loginActivityReference = (LoginActivity) ((Activity) context);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         //Log.e( "CurrentLocation: ", "Heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
     }
-    public void setCurrentLocationAndMoveToNextActivity(){
-        
+
+    public void setCurrentLocationAndMoveToNextActivity() {
+
         //askForPermission();
+
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener((Activity) context, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location!=null) {
+                if (location != null) {
                     Log.e("onSuccess: Lattitude", String.valueOf(location.getLatitude()));
                     Log.e("onSuccess: Longitude", String.valueOf(location.getLongitude()));
                     SuperPrefs prefs = new SuperPrefs(loginActivityReference);
-                    prefs.setString(LONGITUDE_KEY_FIREBASE,String.valueOf(location.getLongitude()));
-                    prefs.setString(LATTITUDE_KEY_FIREBASE,String.valueOf(location.getLatitude()));
+                    prefs.setString(LONGITUDE_KEY_FIREBASE, String.valueOf(location.getLongitude()));
+                    prefs.setString(LATTITUDE_KEY_FIREBASE, String.valueOf(location.getLatitude()));
+                    UserLocation userLocation = new UserLocation(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
+                    FirebaseReference.userReference.child(prefs.getString("user-id")).child("location").setValue(userLocation);
+
+
                     //startMainActivity();
                     /*
                     String userId = FirebaseUserID.getFirebaseUserId(context);
                     Log.e("setUpGeoFire: ","user id is " + userId );
                     locationReference = FirebaseReference.userReference.child(userId).child(LOCATION_KEY_FIREBASE);
-                    com.codingblocks.groupchat.model.Location location1 =
-                            new com.codingblocks.groupchat.model.Location(
+                    com.codingblocks.groupchat.model.UserLocation location1 =
+                            new com.codingblocks.groupchat.model.UserLocation(
                                     String.valueOf(location.getLongitude())
                                     ,String.valueOf(location.getLatitude()));
                     locationReference.setValue(location1);*/

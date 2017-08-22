@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.codingblocks.groupchat.FirebaseReference;
-import com.codingblocks.groupchat.model.Location;
+import com.codingblocks.groupchat.model.UserLocation;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.codingblocks.groupchat.utils.CONSTANTS;
 import com.codingblocks.groupchat.utils.FirebaseUserID;
@@ -42,11 +42,11 @@ public class GeoFireSetUp implements CONSTANTS{
         locationReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Location newLocation = dataSnapshot.getValue(Location.class);
+                UserLocation newUserLocation = dataSnapshot.getValue(UserLocation.class);
 
                 GeoQuery geoQuery = geoFire.queryAtLocation(
-                        new GeoLocation(Double.parseDouble(newLocation.getLat())
-                                ,Double.parseDouble(newLocation.getLon())),1);
+                        new GeoLocation(Double.parseDouble(newUserLocation.getLat())
+                                ,Double.parseDouble(newUserLocation.getLon())),1);
 
                 Log.e( "onDataChange: ","LOCATION QUERY LISTENER SET" );
                 geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
@@ -57,9 +57,9 @@ public class GeoFireSetUp implements CONSTANTS{
 
                     @Override
                     public void onKeyExited(String key) {
-                        Location location = new Location(superPrefs.getString(LONGITUDE_KEY_FIREBASE),
+                        UserLocation userLocation = new UserLocation(superPrefs.getString(LONGITUDE_KEY_FIREBASE),
                                 superPrefs.getString(LATTITUDE_KEY_FIREBASE));
-                        locationReference.setValue(location);
+                        locationReference.setValue(userLocation);
                         print("onKeyExited");
                     }
 

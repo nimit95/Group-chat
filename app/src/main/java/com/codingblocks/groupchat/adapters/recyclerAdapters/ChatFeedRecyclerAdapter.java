@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +103,8 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
 
         RMessage message = getData().get(position);
 
-        chatViewHolder.timeStamp.setText(message.getTimeStamp().split(" ")[1]);
+        Log.e("onBindViewHolder: ", message.getTimeStamp());
+        chatViewHolder.timeStamp.setText(message.getTimeStamp().split(" ")[3].substring(0,5));
         chatViewHolder.chatTextView.setText(message.getMessage());
 
     }}

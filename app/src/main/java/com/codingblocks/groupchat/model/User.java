@@ -14,16 +14,16 @@ public class User {
     private String userId, name;
     private ArrayList<String> usersGroup;
 
-    private Location location;
+    private UserLocation userLocation;
     public User(){
 
     }
 
-    public User(String userId, String name, ArrayList<String> usersGroup, Location location) {
+    public User(String userId, String name, ArrayList<String> usersGroup, UserLocation userLocation) {
         this.userId = userId;
         this.name = name;
         this.usersGroup = usersGroup;
-        this.location = location;
+        this.userLocation = userLocation;
     }
 
     public String getUserId() {
@@ -51,11 +51,11 @@ public class User {
         this.usersGroup = usersGroup;
     }
 
-    public Location getLocation() {
-        return location;
+    public UserLocation getUserLocation() {
+        return userLocation;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setUserLocation(UserLocation userLocation) {
+        this.userLocation = userLocation;
     }
 }

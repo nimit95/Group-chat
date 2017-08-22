@@ -19,7 +19,7 @@ public interface GifyTrendingGifInterface {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    @GET("/v1/gifs/trending?api_key=6653ca75049245fdb19afbe697f0c0b5")
+    @GET("/v1/gifs/trending?api_key=6653ca75049245fdb19afbe697f0c0b5&limit=15")
     Call<GifyNetworkData> getGifyTrendingGif();
 
 

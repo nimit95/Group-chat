@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.codingblocks.groupchat.activities.MainActivity;
 import com.codingblocks.groupchat.location.CurrentLocation;
 import com.codingblocks.groupchat.location.GeoFireSetUp;
-import com.codingblocks.groupchat.model.Location;
+import com.codingblocks.groupchat.model.UserLocation;
 import com.codingblocks.groupchat.model.User;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.google.android.gms.auth.api.Auth;
@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                 signIn();
             }
         });
-        askForPermission();
+       // askForPermission();
     }
 
     @Override
@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
             //askForPermission();
 
             //askForPermission();
-            if(isLocationPresent())
+            //if(isLocationPresent())
                 startMainActivity();
         }
         if(currentUser==null){
@@ -129,12 +129,13 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void startMainActivity(){
 
+        askForPermission();
+        //GeoFireSetUp geoFireSetUp = new GeoFireSetUp(LoginActivity.this);
+        //geoFireSetUp.setUpGeoFire();
 
-        GeoFireSetUp geoFireSetUp = new GeoFireSetUp(LoginActivity.this);
-        geoFireSetUp.setUpGeoFire();
-
+        /*
         SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
-        Log.e(TAG, "longitude from Prefs "+prefs.getString("lon") );
+        Log.e(TAG, "longitude from Prefs "+prefs.getString("lon") );*/
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -153,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
            public void onDataChange(DataSnapshot dataSnapshot) {
                if(!dataSnapshot.hasChild(currentUser.getUid())){
 
-                   if(isLocationPresent())
+                   //if(isLocationPresent())
                        createNewUser(currentUser,mDatabase);
 //                   else
 //                       askForPermission();
@@ -183,11 +184,11 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseReference users = mDatabase.child("users").push();
 
         SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
-        Location location = new Location(prefs.getString("lon"),prefs.getString("lat"));
-        //Location location = new Location("0","0");
+        UserLocation userLocation = new UserLocation("0","0");
+        //UserLocation userLocation = new UserLocation("0","0");
         User user = new User(users.getKey(),
                 currentUser.getDisplayName(), new ArrayList<String>(),
-                location);
+                userLocation);
 
         users.setValue(user);
 

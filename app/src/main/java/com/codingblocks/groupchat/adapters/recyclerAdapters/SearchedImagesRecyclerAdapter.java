@@ -1,15 +1,24 @@
 package com.codingblocks.groupchat.adapters.recyclerAdapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.activities.ChatActivity;
 import com.codingblocks.groupchat.adapters.viewHolders.SearchedImagesViewHolder;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 
 import java.util.ArrayList;
@@ -39,17 +48,43 @@ public class SearchedImagesRecyclerAdapter extends RecyclerView.Adapter<Searched
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ChatActivity)context).sendMessageToFirebase(imageOrGifUrlList.get(sivh.getAdapterPosition()),type);
+                ((ChatActivity) context).slidingPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                ((ChatActivity) context).sendMessageToFirebase(imageOrGifUrlList.get(sivh.getAdapterPosition()), type);
+
             }
         });
         return sivh;
     }
 
     @Override
-    public void onBindViewHolder(SearchedImagesViewHolder holder, int position) {
+    public void onBindViewHolder(final SearchedImagesViewHolder holder, int position) {
         String url = imageOrGifUrlList.get(position);
-       // GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(holder.gifImageView);
-        Glide.with(context).load(url).into(holder.gifImageView);
+        // GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(holder.gifImageView);
+        Log.e("onBindViewHolder: ", url);
+        // holder.progressBar
+        // holder.gifImageView.setHe(holder.linearLayout.getWidth());
+
+        //holder.gifImageView.getLayoutParams().height = holder.linearLayout.getWidth()/3;
+        // holder.gifImageView.requestLayout();
+
+
+
+        Glide.with(context).load(url)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+
+                })
+                .into(holder.gifImageView);
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class GifyImages {
-    @SerializedName("fixed_width")
+    @SerializedName("fixed_height")
     @Expose
     private FixedWidthGif fixedWidthGif;
 
