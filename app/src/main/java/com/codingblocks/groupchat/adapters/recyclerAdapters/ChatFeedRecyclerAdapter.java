@@ -29,6 +29,7 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
 
     private int lastMsgCount;
     private RecyclerView recyclerView;
+    private Context context;
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
@@ -44,7 +45,7 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
 
     public ChatFeedRecyclerAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<RMessage> data, boolean autoUpdate) {
         super(context, data, autoUpdate);
-
+        this.context = context;
         lastMsgCount = getItemCount();
         RealmChangeListener<RealmResults> listener = new RealmChangeListener<RealmResults>() {
             @Override
@@ -111,7 +112,7 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
         else if (message.getMessageType()==CONSTANTS.MESSAGE_TYPE_GIF) {
             chatViewHolder.chatTextView.setVisibility(View.GONE);
             chatViewHolder.imageGIfMessage.setVisibility(View.VISIBLE);
-            Glide.with(context).load(message.getMessage()).into(chatViewHolder.imageGIfMessage);
+            Glide.with(context.getApplicationContext()).load(message.getMessage()).into(chatViewHolder.imageGIfMessage);
         }
 
     }}

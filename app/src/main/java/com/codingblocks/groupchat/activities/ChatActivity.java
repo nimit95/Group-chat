@@ -189,7 +189,7 @@ public class ChatActivity extends AppCompatActivity {
         RealmController.addToRealm(listOfMessages,this, getGroupID());
 
         RealmResults<RMessage> results = RealmController.fetchChats(getGroupID());
-        chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(this, results,true);
+        chatFeedRecyclerAdapter = new ChatFeedRecyclerAdapter(ChatActivity.this, results,true);
         rvChatFeed.setAdapter(chatFeedRecyclerAdapter);
         rvChatFeed.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -237,7 +237,7 @@ public class ChatActivity extends AppCompatActivity {
         listOfMessages.add(msg);
         return listOfMessages;
     }
-
+/*
     @Override
     public void onBackPressed() {
         Log.e("onBackPressed: ", "back clicked");
@@ -248,8 +248,9 @@ public class ChatActivity extends AppCompatActivity {
         }
         else{
             super.onBackPressed();
+            finish();
         }
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -307,5 +308,9 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void clearUserMessage() {
+        userMessage.setText("");
     }
 }
