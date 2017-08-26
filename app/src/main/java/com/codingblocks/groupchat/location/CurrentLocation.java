@@ -65,4 +65,17 @@ public class CurrentLocation implements CONSTANTS{
             }
         });
     }
+    private void startMainActivity(){
+
+        Intent intentForService =new Intent(context,GeoFireSetUp.class);
+        context.startService(intentForService);
+
+
+        SuperPrefs prefs = new SuperPrefs(context);
+        Log.e("longitude from Prefs ",prefs.getString("lon") );
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+        ((Activity)context).finish();
+       // context.finish();
+    }
 }

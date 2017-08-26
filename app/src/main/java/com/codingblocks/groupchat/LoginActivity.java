@@ -49,6 +49,57 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1001;
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                //.enableAutoManage(, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
+        //askForPermission();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+       // Log.e("yeh chal rha hai",currentUser.toString());
+        updateUI(currentUser);
+    }
+
+    private void updateUI(FirebaseUser currentUser) {
+        if (currentUser != null) {
+            //askForPermission();
+
+            askForPermission();
+            //if(isLocationPresent())
+            //    startMainActivity();
+        }
+        if(currentUser==null){
+            Log.e(TAG, "updateUI: null aa rha hai" );
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
@@ -77,57 +128,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-
-        mAuth = FirebaseAuth.getInstance();
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                //.enableAutoManage(, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
-        });
-        askForPermission();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-       // Log.e("yeh chal rha hai",currentUser.toString());
-        updateUI(currentUser);
-    }
-
-    private void updateUI(FirebaseUser currentUser) {
-        if (currentUser != null) {
-            //askForPermission();
-
-            //askForPermission();
-            if(isLocationPresent())
-                startMainActivity();
-        }
-        if(currentUser==null){
-            Log.e(TAG, "updateUI: null aa rha hai" );
-        }
-    }
     private void startMainActivity(){
 
       Intent intentForService =new Intent(LoginActivity.this,GeoFireSetUp.class);
@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
            public void onDataChange(DataSnapshot dataSnapshot) {
                if(!dataSnapshot.hasChild(currentUser.getUid())){
 
-                   if(isLocationPresent())
+                 //  if(isLocationPresent())
                        createNewUser(currentUser,mDatabase);
 //                   else
 //                       askForPermission();
@@ -184,11 +184,11 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseReference users = mDatabase.child("users").push();
 
         SuperPrefs prefs = new SuperPrefs(LoginActivity.this);
-        Location location = new Location(prefs.getString("lon"),prefs.getString("lat"));
+        //Location location = new Location(prefs.getString("lon"),prefs.getString("lat"));
         //Location location = new Location("0","0");
         User user = new User(users.getKey(),
                 currentUser.getDisplayName(), new ArrayList<String>(),
-                location);
+                new Location("0","0"));
 
         users.setValue(user);
 
@@ -199,7 +199,8 @@ public class LoginActivity extends AppCompatActivity {
 
         SuperPrefs pref = new SuperPrefs(LoginActivity.this);
         pref.setString("user-id", users.getKey());
-        pref.setString("user-name", user.getName());
+        Log.e(TAG, "createNewUser: "+ user.getName());
+        pref.setString("userName", user.getName());
 
 
         // askForPermission();
