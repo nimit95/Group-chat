@@ -1,6 +1,5 @@
 package com.codingblocks.groupchat;
 
-import android.*;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,10 +13,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codingblocks.groupchat.activities.MainActivity;
-import com.codingblocks.groupchat.activities.PlacesActivity;
 import com.codingblocks.groupchat.location.CurrentLocation;
 import com.codingblocks.groupchat.location.GeoFireSetUp;
-
 import com.codingblocks.groupchat.model.User;
 import com.codingblocks.groupchat.model.UserLocation;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;

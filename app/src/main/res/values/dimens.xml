@@ -6,4 +6,5 @@
     <dimen name="cmv_padding">10dp</dimen>
     <dimen name="cmv_corner_radius">5dp</dimen>
     <dimen name="dimen_20dp">20dp</dimen>
+    <dimen name="dimen_10dp">10dp</dimen>
 </resources>

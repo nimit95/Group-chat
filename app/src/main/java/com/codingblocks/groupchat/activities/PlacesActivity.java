@@ -3,7 +3,12 @@ package com.codingblocks.groupchat.activities;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.network.PlacesApiInterface;
@@ -30,10 +35,15 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
     private String PROXIMITY_RADIUS = "10000";
     //Subscription subscription;
 
+    private Spinner availableTypeOfPlacesSpinner;
+    private RecyclerView placesApiResultRecyclerView;
+    private List<String> listOfTypesOfPlaces;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places);
+        initialise();
+        setUpSpinner();
         prefs = new SuperPrefs(this);
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -44,7 +54,34 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
         mGoogleApiClient.connect();
 
 
-        getPlaces("restaurant");
+        //getPlaces("restaurant");
+    }
+
+    private void initialise() {
+        availableTypeOfPlacesSpinner = (Spinner) findViewById(R.id.available_types_of_places);
+        placesApiResultRecyclerView = (RecyclerView) findViewById(R.id.places_api_result_rv);
+        listOfTypesOfPlaces.add("restaurant");
+        listOfTypesOfPlaces.add("Something else");
+    }
+
+    private void setUpSpinner() {
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item,listOfTypesOfPlaces);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        availableTypeOfPlacesSpinner.setAdapter(arrayAdapter);
+        availableTypeOfPlacesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String choosen = adapterView.getItemAtPosition(i).toString();
+                Log.e("onItemSelected: ", choosen);
+                getPlaces(choosen);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Log.e("onNothingSelected: ", "Nothing");
+            }
+        });
     }
 
     @Override

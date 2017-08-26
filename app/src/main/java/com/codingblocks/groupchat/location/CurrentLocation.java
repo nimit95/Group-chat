@@ -13,6 +13,7 @@ import android.util.Log;
 import com.codingblocks.groupchat.FirebaseReference;
 import com.codingblocks.groupchat.LoginActivity;
 import com.codingblocks.groupchat.activities.MainActivity;
+import com.codingblocks.groupchat.activities.PlacesActivity;
 import com.codingblocks.groupchat.model.UserLocation;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.codingblocks.groupchat.utils.CONSTANTS;
@@ -82,7 +83,7 @@ public class CurrentLocation implements CONSTANTS {
         SuperPrefs prefs = new SuperPrefs(context);
         Log.e("longitude from Prefs ",prefs.getString("lon") );
         Log.e("startMainActivity: ", prefs.getString("userName"));
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, PlacesActivity.class);
         context.startActivity(intent);
         ((Activity)context).finish();
        // context.finish();
