@@ -5,7 +5,11 @@
     android:id="@+id/linear_layout"
     android:padding="1dp"
     android:orientation="vertical">
-
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
     <ImageView
         android:id="@+id/gif_image"
         android:layout_width="200dp"
@@ -13,11 +17,7 @@
         android:layout_height="150dp"
         android:contentDescription="gif" />
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+
 
 </LinearLayout>
 

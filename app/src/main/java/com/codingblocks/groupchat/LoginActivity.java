@@ -1,5 +1,7 @@
 package com.codingblocks.groupchat;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,8 +17,9 @@ import com.codingblocks.groupchat.activities.MainActivity;
 import com.codingblocks.groupchat.activities.PlacesActivity;
 import com.codingblocks.groupchat.location.CurrentLocation;
 import com.codingblocks.groupchat.location.GeoFireSetUp;
-import com.codingblocks.groupchat.model.Location;
+
 import com.codingblocks.groupchat.model.User;
+import com.codingblocks.groupchat.model.UserLocation;
 import com.codingblocks.groupchat.sharedPref.SuperPrefs;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -161,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
                }
                else{
                    getFirebaseUserId(userIdToFirebaseRef.child(currentUser.getUid()));
+
                }
                updateUI(currentUser);
                userIdToFirebaseRef.removeEventListener(this);
@@ -188,7 +192,7 @@ public class LoginActivity extends AppCompatActivity {
         //Location location = new Location("0","0");
         User user = new User(users.getKey(),
                 currentUser.getDisplayName(), new ArrayList<String>(),
-                new Location("0","0"));
+                new UserLocation("0","0"));
 
         users.setValue(user);
 
@@ -196,11 +200,8 @@ public class LoginActivity extends AppCompatActivity {
         hm.put(currentUser.getUid(), users.getKey());
         mDatabase.child("userIdToUser").child(currentUser.getUid()).setValue(users.getKey());
         Log.e("user-id-create new", users.getKey());
+        saveUserDetailsToPref(user);
 
-        SuperPrefs pref = new SuperPrefs(LoginActivity.this);
-        pref.setString("user-id", users.getKey());
-        Log.e(TAG, "createNewUser: "+ user.getName());
-        pref.setString("userName", user.getName());
 
 
         // askForPermission();
@@ -213,9 +214,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //HashMap<String,String> hm = (HashMap<String, String>) dataSnapshot.getValue();
-                Log.e("user-id-getFirebase", dataSnapshot.getValue(String.class));
-                new SuperPrefs(LoginActivity.this).setString("user-id",dataSnapshot.getValue(String.class));
+                String firebaseUserId = dataSnapshot.getValue(String.class);
+                Log.e("user-id-getFirebase", firebaseUserId);
+               // new SuperPrefs(LoginActivity.this).setString("user-id",dataSnapshot.getValue(String.class));
                 currentUserIdToFirebaseRef.removeEventListener(this);
+                recoverUserFromDatabase(firebaseUserId);
             }
 
             @Override
@@ -224,7 +227,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    public void recoverUserFromDatabase(final String firebaseUserId) {
+        FirebaseReference.userReference.child(firebaseUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User currUser = dataSnapshot.getValue(User.class);
+                saveUserDetailsToPref(currUser);
+                FirebaseReference.userReference.child(firebaseUserId).removeEventListener(this);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -276,7 +293,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void askForPermission() {
         if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.READ_CONTACTS)
+                Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
@@ -300,5 +317,11 @@ public class LoginActivity extends AppCompatActivity {
                 // result of the request.
             }
         }
+    }
+    private void saveUserDetailsToPref(User user) {
+        SuperPrefs pref = new SuperPrefs(LoginActivity.this);
+        pref.setString("user-id", user.getUserId());
+        Log.e(TAG, "createNewUser: "+ user.getName());
+        pref.setString("userName", user.getName());
     }
 }

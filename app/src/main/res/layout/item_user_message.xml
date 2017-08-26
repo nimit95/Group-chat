@@ -39,6 +39,12 @@
             android:maxWidth="250dp"
             android:fontFamily="sans-serif-light"
             tools:text="a" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/image_gif"
+            android:visibility="gone"
+            android:scaleType="fitXY"/>
         <FrameLayout
             android:layout_width="40dp"
             android:minWidth="10dp"

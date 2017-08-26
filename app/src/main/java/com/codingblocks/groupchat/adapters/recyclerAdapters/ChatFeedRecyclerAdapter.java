@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.viewHolders.ChatViewHolder;
 import com.codingblocks.groupchat.realm.RealmModels.RMessage;
@@ -105,6 +106,12 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
 
         Log.e("onBindViewHolder: ", message.getTimeStamp());
         chatViewHolder.timeStamp.setText(message.getTimeStamp().split(" ")[3].substring(0,5));
-        chatViewHolder.chatTextView.setText(message.getMessage());
+        if (message.getMessageType()==CONSTANTS.MESSAGE_TYPE_TEXT)
+            chatViewHolder.chatTextView.setText(message.getMessage());
+        else if (message.getMessageType()==CONSTANTS.MESSAGE_TYPE_GIF) {
+            chatViewHolder.chatTextView.setVisibility(View.GONE);
+            chatViewHolder.imageGIfMessage.setVisibility(View.VISIBLE);
+            Glide.with(context).load(message.getMessage()).into(chatViewHolder.imageGIfMessage);
+        }
 
     }}

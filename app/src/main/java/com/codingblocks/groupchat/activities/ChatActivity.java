@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -166,7 +167,7 @@ public class ChatActivity extends AppCompatActivity {
         Message obj = new Message(
                 message,
                 FirebaseUserID.getFirebaseUserId(this),
-                DateFormat.getDateInstance().format(new Date()),
+                DateFormat.getDateTimeInstance().format(new Date()),
                 getGroupID(),
                 FirebaseUserID.getUserName(this),
                 type

@@ -57,7 +57,7 @@ public class CurrentLocation implements CONSTANTS {
                     prefs.setString(LATTITUDE_KEY_FIREBASE, String.valueOf(location.getLatitude()));
                     UserLocation userLocation = new UserLocation(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
                     FirebaseReference.userReference.child(prefs.getString("user-id")).child("location").setValue(userLocation);
-
+                    startMainActivity();
 
                     //startMainActivity();
                     /*
@@ -81,6 +81,7 @@ public class CurrentLocation implements CONSTANTS {
 
         SuperPrefs prefs = new SuperPrefs(context);
         Log.e("longitude from Prefs ",prefs.getString("lon") );
+        Log.e("startMainActivity: ", prefs.getString("userName"));
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
         ((Activity)context).finish();
