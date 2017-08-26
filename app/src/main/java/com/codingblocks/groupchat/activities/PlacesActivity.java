@@ -62,8 +62,15 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
         availableTypeOfPlacesSpinner = (Spinner) findViewById(R.id.available_types_of_places);
         placesApiResultRecyclerView = (RecyclerView) findViewById(R.id.places_api_result_rv);
         listOfTypesOfPlaces = new ArrayList<>();
+
         listOfTypesOfPlaces.add("restaurant");
-        listOfTypesOfPlaces.add("Something else");
+        listOfTypesOfPlaces.add("bar");
+        listOfTypesOfPlaces.add("lodging");
+        listOfTypesOfPlaces.add("food");
+        listOfTypesOfPlaces.add("store");
+        listOfTypesOfPlaces.add("point_of_interest");
+        listOfTypesOfPlaces.add("meal_delivery");
+        listOfTypesOfPlaces.add("meal_takeaway");
     }
 
     private void setUpSpinner() {

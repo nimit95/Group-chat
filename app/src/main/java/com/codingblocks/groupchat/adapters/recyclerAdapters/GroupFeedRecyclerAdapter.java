@@ -40,7 +40,6 @@ public class GroupFeedRecyclerAdapter extends RecyclerView.Adapter<GroupViewHold
             public void onClick(View view) {
                 context.startActivity(new Intent(context, ChatActivity.class).
                         putExtra("group_id", groupList.get(holder.getAdapterPosition()).getGroupID()));
-
             }
         });
         return holder;
