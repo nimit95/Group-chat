@@ -56,29 +56,23 @@ public class CurrentLocation implements CONSTANTS {
                     SuperPrefs prefs = new SuperPrefs(loginActivityReference);
                     prefs.setString(LONGITUDE_KEY_FIREBASE, String.valueOf(location.getLongitude()));
                     prefs.setString(LATTITUDE_KEY_FIREBASE, String.valueOf(location.getLatitude()));
+
+                    setUpListener();
                     UserLocation userLocation = new UserLocation(String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
                     FirebaseReference.userReference.child(prefs.getString("user-id")).child("location").setValue(userLocation);
                     startMainActivity();
 
-                    //startMainActivity();
-                    /*
-                    String userId = FirebaseUserID.getFirebaseUserId(context);
-                    Log.e("setUpGeoFire: ","user id is " + userId );
-                    locationReference = FirebaseReference.userReference.child(userId).child(LOCATION_KEY_FIREBASE);
-                    com.codingblocks.groupchat.model.UserLocation location1 =
-                            new com.codingblocks.groupchat.model.UserLocation(
-                                    String.valueOf(location.getLongitude())
-                                    ,String.valueOf(location.getLatitude()));
-                    locationReference.setValue(location1);*/
                 }
             }
         });
     }
-    private void startMainActivity(){
 
+    private void setUpListener() {
         Intent intentForService =new Intent(context,GeoFireSetUp.class);
         context.startService(intentForService);
+    }
 
+    private void startMainActivity(){
 
         SuperPrefs prefs = new SuperPrefs(context);
         Log.e("longitude from Prefs ",prefs.getString("lon") );

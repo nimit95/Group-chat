@@ -22,6 +22,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.places.Places;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,6 +61,7 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
     private void initialise() {
         availableTypeOfPlacesSpinner = (Spinner) findViewById(R.id.available_types_of_places);
         placesApiResultRecyclerView = (RecyclerView) findViewById(R.id.places_api_result_rv);
+        listOfTypesOfPlaces = new ArrayList<>();
         listOfTypesOfPlaces.add("restaurant");
         listOfTypesOfPlaces.add("Something else");
     }
