@@ -50,7 +50,7 @@ public class SearchedImagesRecyclerAdapter extends RecyclerView.Adapter<Searched
             public void onClick(View view) {
                 ((ChatActivity) context).slidingPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 ((ChatActivity) context).sendMessageToFirebase(imageOrGifUrlList.get(sivh.getAdapterPosition()), type);
-
+                ((ChatActivity) context).clearUserMessage();
             }
         });
         return sivh;
@@ -79,6 +79,7 @@ public class SearchedImagesRecyclerAdapter extends RecyclerView.Adapter<Searched
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         holder.progressBar.setVisibility(View.GONE);
+                        holder.gifImageView.setVisibility(View.VISIBLE);
                         return false;
                     }
 

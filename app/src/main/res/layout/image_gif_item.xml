@@ -8,6 +8,7 @@
     <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyle"
+
         android:layout_width="match_parent"
         android:layout_height="50dp" />
     <ImageView
@@ -15,6 +16,7 @@
         android:layout_width="200dp"
         android:scaleType="fitXY"
         android:layout_height="150dp"
+        android:visibility="gone"
         android:contentDescription="gif" />
 
 

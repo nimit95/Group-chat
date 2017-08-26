@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
             //askForPermission();
-
+            Log.e("updateUi", "Asking for perm");
             askForPermission();
             //if(isLocationPresent())
             //    startMainActivity();
@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-
+                    Log.e("onRequestPermissions: ", "Going to take location" );
                     CurrentLocation currentLocation = new CurrentLocation(LoginActivity.this);
                     currentLocation.setCurrentLocationAndMoveToNextActivity();
 
@@ -316,6 +316,10 @@ public class LoginActivity extends AppCompatActivity {
                 // app-defined int constant. The callback method gets the
                 // result of the request.
             }
+        }
+        else {
+            CurrentLocation currentLocation = new CurrentLocation(LoginActivity.this);
+            currentLocation.setCurrentLocationAndMoveToNextActivity();
         }
     }
     private void saveUserDetailsToPref(User user) {
