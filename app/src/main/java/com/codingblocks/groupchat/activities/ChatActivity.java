@@ -1,14 +1,12 @@
 package com.codingblocks.groupchat.activities;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SlidingPaneLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -28,9 +25,7 @@ import com.codingblocks.groupchat.model.GifyNetworkData;
 import com.codingblocks.groupchat.model.Message;
 import com.codingblocks.groupchat.network.GifyTrendingGifInterface;
 import com.codingblocks.groupchat.realm.RealmController;
-import com.codingblocks.groupchat.realm.RealmModels.RGroup;
 import com.codingblocks.groupchat.realm.RealmModels.RMessage;
-import com.codingblocks.groupchat.utils.CONSTANTS;
 import com.codingblocks.groupchat.utils.FirebaseUserID;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,14 +37,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.codingblocks.groupchat.utils.CONSTANTS.MESSAGE_TYPE_GIF;
 import static com.codingblocks.groupchat.utils.CONSTANTS.MESSAGE_TYPE_TEXT;
@@ -167,15 +158,20 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
     public void sendMessageToFirebase(String message, int type) {
+        /*
         Message obj = new Message(message, FirebaseUserID.getFirebaseUserId(this),
                 DateFormat.getDateTimeInstance().format(new Date())
-                        ,getGroupID(), FirebaseUserID.getUserName(this),type);
+                        ,getGroupID(), FirebaseUserID.getUserName(this),type);*/
+        Message obj = new Message(
+                message,
+                FirebaseUserID.getFirebaseUserId(this),
+                DateFormat.getDateInstance().format(new Date()),
+                getGroupID(),
+                FirebaseUserID.getUserName(this),
+                type
+        );
         messageList.add(obj);
-        /*FirebaseReference.groupsReference.child(getGroupID()).child("message")
-                .setValue(messageList);*/
-
         FirebaseReference.groupsReference.child(getGroupID()).child("message").push().setValue(obj);
     }
 
@@ -243,7 +239,6 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       // super.onBackPressed();
         Log.e("onBackPressed: ", "back clicked");
         if(slidingPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.COLLAPSED
                 || slidingPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.EXPANDED
@@ -253,7 +248,6 @@ public class ChatActivity extends AppCompatActivity {
         else{
             super.onBackPressed();
         }
-
     }
 
     @Override
@@ -285,7 +279,6 @@ public class ChatActivity extends AppCompatActivity {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,  getGroupID() );
-        //startActivity(Intent.createChooser(sharingIntent, "select app ..."));
         startActivity(sharingIntent);
     }
 

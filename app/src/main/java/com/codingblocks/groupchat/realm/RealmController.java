@@ -43,6 +43,8 @@ public class RealmController {
                         elem.setFirebaseUserID(msg.getFirebaseUserID());
                         elem.setTimeStamp(msg.getTimestamp());
                         elem.setGroupID(msg.getGroupID());
+                        elem.setUserName(msg.getUserName());
+                        elem.setMessageType(msg.getMessageType());
                         realm.insertOrUpdate(elem);
                         Log.e( "execute: ", msg.getMessage());
                     }

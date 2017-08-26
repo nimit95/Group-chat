@@ -51,9 +51,6 @@ dependencies {
     // Required -- JUnit 4 framework
     // Optional -- Mockito framework
 
-    compile 'io.reactivex:rxandroid:1.2.0'
-    compile 'io.reactivex:rxjava:1.1.4'
-
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
     compile 'de.hdodenhof:circleimageview:2.1.0'
