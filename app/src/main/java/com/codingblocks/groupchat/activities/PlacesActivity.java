@@ -65,6 +65,8 @@ public class PlacesActivity extends FragmentActivity implements OnConnectionFail
 
         listOfTypesOfPlaces.add("restaurant");
         listOfTypesOfPlaces.add("bar");
+        listOfTypesOfPlaces.add("cafe");
+        listOfTypesOfPlaces.add("establishment");
         listOfTypesOfPlaces.add("lodging");
         listOfTypesOfPlaces.add("food");
         listOfTypesOfPlaces.add("store");
