@@ -12,6 +12,7 @@ import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.activities.ChatActivity;
 import com.codingblocks.groupchat.adapters.viewHolders.GroupViewHolder;
 import com.codingblocks.groupchat.model.Group;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -38,8 +39,12 @@ public class GroupFeedRecyclerAdapter extends RecyclerView.Adapter<GroupViewHold
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, ChatActivity.class).
-                        putExtra("group_id", groupList.get(holder.getAdapterPosition()).getGroupID()));
+                Gson gson = new Gson();
+                String obj = gson.toJson(groupList.get(holder.getAdapterPosition()));
+                context.startActivity(new Intent(context, ChatActivity.class)
+                        .putExtra("group_id", groupList.get(holder.getAdapterPosition()).getGroupID())
+                        .putExtra("group", obj)
+                );
 
             }
         });

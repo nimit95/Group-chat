@@ -115,4 +115,9 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
             Glide.with(context.getApplicationContext()).load(message.getMessage()).into(chatViewHolder.imageGIfMessage);
         }
 
-    }}
+        if(getItemViewType(position)==OTHERS_MESSAGE) {
+            chatViewHolder.senderName.setText(message.getUserName().split(" ")[0]);
+        }
+
+    }
+}

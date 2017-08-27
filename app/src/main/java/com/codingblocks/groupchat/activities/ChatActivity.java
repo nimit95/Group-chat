@@ -23,6 +23,7 @@ import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.adapters.recyclerAdapters.ChatFeedRecyclerAdapter;
 import com.codingblocks.groupchat.adapters.recyclerAdapters.SearchedImagesRecyclerAdapter;
 import com.codingblocks.groupchat.model.GifyNetworkData;
+import com.codingblocks.groupchat.model.Group;
 import com.codingblocks.groupchat.model.Message;
 import com.codingblocks.groupchat.network.GifyTrendingGifInterface;
 import com.codingblocks.groupchat.realm.RealmController;
@@ -31,6 +32,7 @@ import com.codingblocks.groupchat.utils.FirebaseUserID;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.text.DateFormat;
@@ -65,7 +67,16 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         groupId = intent.getStringExtra("group_id");
+        String group = intent.getStringExtra("group");
+        Group currGroup = new Gson().fromJson(group, Group.class);
+        Log.e("group Name", currGroup.getGroupName());
         messageList = new ArrayList<>();
+
+        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_chevron_left_white_24dp);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle(currGroup.getGroupName());
 
         init();
         setupAdapter();
@@ -156,6 +167,8 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
 
