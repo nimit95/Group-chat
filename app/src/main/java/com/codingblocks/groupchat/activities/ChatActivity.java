@@ -237,20 +237,9 @@ public class ChatActivity extends AppCompatActivity {
         listOfMessages.add(msg);
         listOfMessages.add(msg2);
         listOfMessages.add(msg);
-        listOfMessages.add(msg);
-        listOfMessages.add(msg);
-        listOfMessages.add(msg2);
-        listOfMessages.add(msg);
-        listOfMessages.add(msg);
-        listOfMessages.add(msg);
-        listOfMessages.add(msg);
-        listOfMessages.add(msg);
-        listOfMessages.add(msg);
-        listOfMessages.add(msg);
-        listOfMessages.add(msg);
         return listOfMessages;
     }
-/*
+
     @Override
     public void onBackPressed() {
         Log.e("onBackPressed: ", "back clicked");
@@ -263,7 +252,7 @@ public class ChatActivity extends AppCompatActivity {
             super.onBackPressed();
             finish();
         }
-    }*/
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
