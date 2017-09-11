@@ -105,11 +105,17 @@ public class ChatFeedRecyclerAdapter extends RealmRecyclerViewAdapter<RMessage, 
 
         RMessage message = getData().get(position);
 
-        Log.e("onBindViewHolder: ", message.getTimeStamp());
-        chatViewHolder.timeStamp.setText(message.getTimeStamp().split(" ")[3].substring(0,5));
-        if (message.getMessageType()==CONSTANTS.MESSAGE_TYPE_TEXT)
+
+        String[] temp = message.getTimeStamp().split(" ");
+        chatViewHolder.timeStamp.setText(temp[1].substring(0,5) + " " +  temp[2]);
+        if (message.getMessageType()==CONSTANTS.MESSAGE_TYPE_TEXT) {
+            Log.e("Cfra", message.getMessage()+ "Message type" + message.getMessageType());
+            chatViewHolder.chatTextView.setVisibility(View.VISIBLE);
+            chatViewHolder.imageGIfMessage.setVisibility(View.GONE);
             chatViewHolder.chatTextView.setText(message.getMessage());
+        }
         else if (message.getMessageType()==CONSTANTS.MESSAGE_TYPE_GIF) {
+            Log.e("Cfra GIF", message.getMessage()+ message.getMessageType());
             chatViewHolder.chatTextView.setVisibility(View.GONE);
             chatViewHolder.imageGIfMessage.setVisibility(View.VISIBLE);
             Glide.with(context.getApplicationContext()).load(message.getMessage()).into(chatViewHolder.imageGIfMessage);

@@ -91,7 +91,7 @@ public class ChatActivity extends AppCompatActivity {
                 messageList.clear();
                 for(DataSnapshot messageShot:dataSnapshot.getChildren()) {
                     messageList.add(messageShot.getValue(Message.class));
-                    Log.e("onDataChange: ", messageList.get(messageList.size()-1).getMessage());
+                    //Log.e("onDataChange: ", messageList.get(messageList.size()-1).getMessage());
                 }
 
                 listOfMessages = messageList;
@@ -113,7 +113,7 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Log.e( "onextChanged: ", charSequence.toString());
+                //Log.e( "onextChanged: ", charSequence.toString());
                 if(charSequence.toString().compareToIgnoreCase("@gify")==0) {
                     slidingPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                     getandDisplayGifs();

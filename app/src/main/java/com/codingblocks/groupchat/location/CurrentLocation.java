@@ -77,7 +77,7 @@ public class CurrentLocation implements CONSTANTS {
         SuperPrefs prefs = new SuperPrefs(context);
         Log.e("longitude from Prefs ",prefs.getString("lon") );
         Log.e("startMainActivity: ", prefs.getString("userName"));
-        Intent intent = new Intent(context, PlacesActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
         ((Activity)context).finish();
        // context.finish();

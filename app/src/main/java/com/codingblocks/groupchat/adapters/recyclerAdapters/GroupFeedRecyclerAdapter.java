@@ -12,6 +12,7 @@ import com.codingblocks.groupchat.R;
 import com.codingblocks.groupchat.activities.ChatActivity;
 import com.codingblocks.groupchat.adapters.viewHolders.GroupViewHolder;
 import com.codingblocks.groupchat.model.Group;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

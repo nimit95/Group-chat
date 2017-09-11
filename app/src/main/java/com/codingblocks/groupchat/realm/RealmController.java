@@ -46,7 +46,7 @@ public class RealmController {
                         elem.setUserName(msg.getUserName());
                         elem.setMessageType(msg.getMessageType());
                         realm.insertOrUpdate(elem);
-                        Log.e( "execute: ", msg.getMessage());
+
                     }
                 }
             });
