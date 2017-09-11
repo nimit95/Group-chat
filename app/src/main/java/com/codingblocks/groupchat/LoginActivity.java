@@ -315,6 +315,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
         else {
+            Log.e("askForPermission: ", "Already given ");
             CurrentLocation currentLocation = new CurrentLocation(LoginActivity.this);
             currentLocation.setCurrentLocationAndMoveToNextActivity();
         }

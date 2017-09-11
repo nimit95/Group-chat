@@ -38,8 +38,13 @@ public class GroupFeedRecyclerAdapter extends RecyclerView.Adapter<GroupViewHold
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, ChatActivity.class).
-                        putExtra("group_id", groupList.get(holder.getAdapterPosition()).getGroupID()));
+                Gson gson = new Gson();
+                String obj = gson.toJson(groupList.get(holder.getAdapterPosition()));
+                context.startActivity(new Intent(context, ChatActivity.class)
+                        .putExtra("group_id", groupList.get(holder.getAdapterPosition()).getGroupID())
+                        .putExtra("group", obj)
+                );
+
             }
         });
         return holder;
